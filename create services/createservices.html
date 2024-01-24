@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Service page</title>
+    <link rel="stylesheet" href="createservices.css" />
+    <link
+      rel="icon"
+      href="assets/Pastel Minimalist Illustrated Playful Pet Shop Center Logo (100 x 50 px) (100 x 50 px).svg"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="background">
+        <div class="background__right">
+          <div class="background__right-header">
+            <h1>Create Package</h1>
+            <i class="fa fa-user-circle"></i>
+          </div>
+          <div class="background__right-input">
+            <form>
+              <div class="group">
+                <input type="text" required />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Service ID</label>
+              </div>
+              <div class="group">
+                <input type="text" required />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Service Name</label>
+              </div>
+              <div class="group">
+                <input type="text" required />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Price</label>
+              </div>
+              <div class="group">
+                <input type="number" required />
+                <span class="highlight"></span>
+                <span class="bar"></span>
+                <label>Descripbe</label>
+             
+            </form>
+          </div>
+          <div class="upload-container">
+            <form action="#" method="post" enctype="multipart/form-data">
+              <input type="file" id="file" name="file" accept="image/*" />
+              <button type="submit">Upload</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="btn">
+          <button class="btn__create">Create</button>
+          <button class="btn__cancel">Cancel</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
