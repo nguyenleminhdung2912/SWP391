@@ -1,0 +1,88 @@
+
+nav {
+  background-color: #D4F2FF;
+  padding: 5px 35px;
+  /* justify-content: space-around; */
+}
+
+h1 {
+  font-size: 24px;
+  margin: 0;
+}
+
+/* nav {
+  list-style: none;
+
+} */
+
+nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  justify-content: space-around;
+}
+nav li{
+}
+
+header input{
+    border-radius: 20px;
+    /* height: 2em; */
+    padding: 5px 10px;
+    border: 0;
+}
+header input:nth-child(1){
+    /*padding: 5px 5vw;*/
+    
+    width: 35vw;
+}
+
+header input:nth-child(2){
+    background-color: #0B96D3;
+    color: white;
+    /* border: 2px inset #0B96D3; */
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+}
+
+.package {
+  display: flex;
+  background-color: white;
+  margin-bottom: 1em;
+  border-radius: 30px;
+}
+
+.package img {
+  width: 350px;
+  height: 200px;
+  margin: 30px;
+}
+
+.list-packages{
+    margin: 0 3%;
+    padding: 3%;
+    background-color: rgba(91, 134, 229, 0.51);
+}
+
+body{
+    background-color: #D4F2FF;
+}
+/* .ava-host{
+    display: flex;
+} */
+h3{
+    color: #000;
+    font-size: 30px;
+    margin-bottom: 0;
+}
+
+.in4_package{
+    width: 25vw;
+}
+
+.package form{
+    margin: 0.5em;
+    margin-top: 12em;
+}
