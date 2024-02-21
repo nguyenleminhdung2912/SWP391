@@ -32,7 +32,7 @@ public class FeedbackService {
     }
 
     public List<FeedbackDTO> getFeedbacksByGuestId(int guestId) {
-        return feedbackRepository.getFeedbacksByGuestId(guestId);
+        return feedbackRepository.getAllFeedbacksByGuestId(guestId);
     }
 
     // Additional service methods if needed

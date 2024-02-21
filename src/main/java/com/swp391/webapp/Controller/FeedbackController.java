@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/FeedbackDTOs")
-public class FeedbackDTOController {
+@RequestMapping("/api/Feedbacks")
+public class FeedbackController {
 
     @Autowired
     private FeedbackService FeedbackDTOService;
@@ -41,3 +41,4 @@ public class FeedbackDTOController {
 
     // Additional endpoints if needed
 }
+
