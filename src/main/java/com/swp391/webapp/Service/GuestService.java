@@ -28,4 +28,8 @@ public class GuestService {
     public void deleteGuest(int guestId) {
         guestRepository.deleteById(guestId);
     }
+
+    public List<GuestDTO> getGuestsByAccountId(int accountId) {
+        return guestRepository.findByAccountId(accountId);
+    }
 }
