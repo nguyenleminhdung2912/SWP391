@@ -18,19 +18,22 @@ public class FeedbackDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_ID")
-    private Integer feedbackId;
+    private Integer feedbackID;
+
+    @ManyToOne
+    @JoinColumn(name = "account_ID", nullable = false)
+    private AccountDTO account;
 
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)
     private ServiceDTO service;
 
-    @ManyToOne
-    @JoinColumn(name = "guest_ID", nullable = false)
-    private GuestDTO guest;
-
-    @Column(name = "description", columnDefinition = "text")
+    @Column
     private String description;
 
     @Column(name = "feedback_date")
     private LocalDate feedbackDate;
+
+    // Constructors, getters, setters, etc.
 }
+

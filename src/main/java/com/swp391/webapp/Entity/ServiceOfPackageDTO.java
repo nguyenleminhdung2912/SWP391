@@ -14,9 +14,9 @@ import lombok.Setter;
 @Table(name = "serviceofpackage")
 public class ServiceOfPackageDTO {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "ServiceOfPackage_ID")
-    private Integer serviceOfPackageId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "service_of_package_ID")
+    private Integer serviceOfPackageID;
 
     @ManyToOne
     @JoinColumn(name = "package_ID", nullable = false)
@@ -25,4 +25,9 @@ public class ServiceOfPackageDTO {
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)
     private ServiceDTO service;
+
+
+
+    // Constructors, getters, setters, etc.
 }
+

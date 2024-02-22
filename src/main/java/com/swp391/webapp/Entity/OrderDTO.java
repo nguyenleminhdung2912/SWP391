@@ -6,33 +6,37 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.math.BigDecimal;
 
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "schedule")
-public class ScheduleDTO {
+@Entity
+@Table(name = "orders")
+public class OrderDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "schedule_ID")
-    private Integer scheduleID;
+    @Column(name = "order_ID")
+    private Integer orderID;
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
     private AccountDTO account;
 
-    @Column(name = "working_date")
-    private LocalDate workingDate;
+    @ManyToOne
+    @JoinColumn(name = "package_ID", nullable = false)
+    private PackageDTO packageDTO;
 
-    @Column(name = "working_time")
-    private LocalTime workingTime;
+    @ManyToOne
+    @JoinColumn(name = "schedule_ID", nullable = false)
+    private ScheduleDTO scheduleDTO;
 
     @Column(nullable = false)
-    private boolean busy;
+    private int quantity;
+
+    @Column(name = "total_price")
+    private BigDecimal totalPrice;
 
     // Constructors, getters, setters, etc.
 }

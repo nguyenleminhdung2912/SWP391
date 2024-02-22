@@ -13,26 +13,33 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
+
 @Table(name = "package")
 public class PackageDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "package_ID")
-    private Integer packageId;
+    private Integer packageID;
 
     @ManyToOne
-    @JoinColumn(name = "host_ID", nullable = false)
-    private HostDTO host;
+    @JoinColumn(name = "account_ID", nullable = false)
+    private AccountDTO account;
 
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(columnDefinition = "text")
+    @Column
     private String description;
 
     @Lob
+    @Column
     private byte[] picture;
+
+    // Constructors, getters, setters, etc.
+
+    // Constructors, getters, setters, etc.
 }
+

@@ -1,29 +1,29 @@
 package com.swp391.webapp.Service;
 
-import com.swp391.webapp.Entity.Service_Detail_DTO;
-import com.swp391.webapp.Repository.Service_Detail_Repository;
+import com.swp391.webapp.Entity.Order_Detail_DTO;
+import com.swp391.webapp.Repository.Order_Detail_Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class Service_DetailService {
+public class Order_DetailService {
 
     @Autowired
-    private Service_Detail_Repository service_DetailRepository;
+    private Order_Detail_Repository service_DetailRepository;
 
     // Service methods for Service_Detail entity
 
-    public List<Service_Detail_DTO> getAllServiceDetails() {
+    public List<Order_Detail_DTO> getAllServiceDetails() {
         return service_DetailRepository.findAll();
     }
 
-    public Service_Detail_DTO getServiceDetailById(int serviceDetailId) {
+    public Order_Detail_DTO getServiceDetailById(int serviceDetailId) {
         return service_DetailRepository.findById(serviceDetailId).orElse(null);
     }
 
-    public Service_Detail_DTO saveServiceDetail(Service_Detail_DTO serviceDetail) {
+    public Order_Detail_DTO saveServiceDetail(Order_Detail_DTO serviceDetail) {
         return service_DetailRepository.save(serviceDetail);
     }
 

@@ -11,22 +11,21 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "service_detail")
-public class Service_Detail_DTO {
+@Table(name = "order_detail")
+public class Order_Detail_DTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "Service_Detail_ID")
-    private Integer serviceDetailId;
+    @Column(name = "order_detail_ID")
+    private Integer orderDetailID;
 
     @ManyToOne
-    @JoinColumn(name = "Cart_ID", nullable = false)
-    private CartDTO cart;
+    @JoinColumn(name = "order_ID", nullable = false)
+    private OrderDTO order;
 
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)
     private ServiceDTO service;
 
-    // Constructors, getters, and setters
-
-    // Omitted for brevity
+    // Constructors, getters, setters, etc.
 }
+

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/schedules")
@@ -22,8 +23,8 @@ public class ScheduleController {
     }
 
     @GetMapping("/{scheduleId}")
-    public ResponseEntity<ScheduleDTO> getScheduleById(@PathVariable int scheduleId) {
-        ScheduleDTO schedule = scheduleService.getScheduleById(scheduleId);
+    public ResponseEntity<Optional<ScheduleDTO>> getScheduleById(@PathVariable int scheduleId) {
+        Optional<ScheduleDTO> schedule = scheduleService.getScheduleById(scheduleId);
         return ResponseEntity.ok(schedule);
     }
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServiceOfPackageService {
@@ -19,8 +20,8 @@ public class ServiceOfPackageService {
         return serviceOfPackageRepository.findAll();
     }
 
-    public ServiceOfPackageDTO getServiceOfPackageById(int serviceOfPackageId) {
-        return serviceOfPackageRepository.findById(serviceOfPackageId).orElse(null);
+    public Optional<ServiceOfPackageDTO> getServiceOfPackageById(int serviceOfPackageId) {
+        return serviceOfPackageRepository.findById(serviceOfPackageId);
     }
 
     public ServiceOfPackageDTO saveServiceOfPackage(ServiceOfPackageDTO serviceOfPackage) {

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/service-of-packages")
@@ -22,8 +23,8 @@ public class ServiceOfPackageController {
     }
 
     @GetMapping("/{serviceOfPackageId}")
-    public ResponseEntity<ServiceOfPackageDTO> getServiceOfPackageById(@PathVariable int serviceOfPackageId) {
-        ServiceOfPackageDTO serviceOfPackage = serviceOfPackageService.getServiceOfPackageById(serviceOfPackageId);
+    public ResponseEntity<Optional<ServiceOfPackageDTO>> getServiceOfPackageById(@PathVariable int serviceOfPackageId) {
+        Optional<ServiceOfPackageDTO> serviceOfPackage = serviceOfPackageService.getServiceOfPackageById(serviceOfPackageId);
         return ResponseEntity.ok(serviceOfPackage);
     }
 

@@ -8,35 +8,24 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "service")
-public class ServiceDTO {
+@Table(name = "wallet")
+public class WalletDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "service_ID")
-    private Integer serviceID;
+    @Column(name = "wallet_ID")
+    private Integer walletID;
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
     private AccountDTO account;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private BigDecimal price;
-
-    @Column
-    private String description;
-
-    @Lob
-    @Column
-    private byte[] picture;
+    @Column(name = "total_money")
+    private BigDecimal totalMoney;
 
     // Constructors, getters, setters, etc.
 }

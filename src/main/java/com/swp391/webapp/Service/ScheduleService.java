@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScheduleService {
@@ -19,8 +20,8 @@ public class ScheduleService {
         return scheduleRepository.findAll();
     }
 
-    public ScheduleDTO getScheduleById(int scheduleId) {
-        return scheduleRepository.findById(scheduleId).orElse(null);
+    public Optional<ScheduleDTO> getScheduleById(int scheduleId) {
+        return scheduleRepository.findById(scheduleId);
     }
 
     public ScheduleDTO saveSchedule(ScheduleDTO schedule) {

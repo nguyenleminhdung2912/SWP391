@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/packages")
@@ -23,8 +24,8 @@ public class PackageController {
     }
 
     @GetMapping("/{packageId}")
-    public ResponseEntity<PackageDTO> getPackageById(@PathVariable int packageId) {
-        PackageDTO aPackage = packageService.getPackageById(packageId);
+    public ResponseEntity<Optional<PackageDTO>> getPackageById(@PathVariable int packageId) {
+        Optional<PackageDTO> aPackage = packageService.getPackageById(packageId);
         return ResponseEntity.ok(aPackage);
     }
 
