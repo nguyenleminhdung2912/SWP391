@@ -11,11 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "schedule_detail")
 public class Schedule_Detail_DTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_detail_ID")
-    private Long scheduleDetailId;
+    private Integer scheduleDetailId;
 
     @ManyToOne
     @JoinColumn(name = "schedule_ID", nullable = false)

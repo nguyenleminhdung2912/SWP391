@@ -11,11 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "service_detail")
 public class Service_Detail_DTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Service_Detail_ID")
-    private Long serviceDetailId;
+    private Integer serviceDetailId;
 
     @ManyToOne
     @JoinColumn(name = "Cart_ID", nullable = false)

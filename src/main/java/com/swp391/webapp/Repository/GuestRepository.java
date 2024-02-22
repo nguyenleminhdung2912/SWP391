@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface GuestRepository extends JpaRepository<GuestDTO, Integer> {
-    List<GuestDTO> findByAccountId(int accountId);
+//    List<GuestDTO> findByAccountId(int accountId);
 }

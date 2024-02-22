@@ -13,11 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "package")
 public class PackageDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "package_ID")
-    private Long packageId;
+    private Integer packageId;
 
     @ManyToOne
     @JoinColumn(name = "host_ID", nullable = false)

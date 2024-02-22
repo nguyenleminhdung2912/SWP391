@@ -41,9 +41,9 @@ public class ServiceController {
     }
 
     // Additional endpoints
-    @GetMapping("/{serviceId}/feedbacks")
-    public ResponseEntity<List<FeedbackDTO>> getFeedbacksByServiceId(@PathVariable Long serviceId) {
-        List<FeedbackDTO> feedbacks = serviceService.getFeedbacksByServiceId(serviceId);
-        return ResponseEntity.ok(feedbacks);
-    }
+//    @GetMapping("/{serviceId}/feedbacks")
+//    public ResponseEntity<List<FeedbackDTO>> getFeedbacksByServiceId(@PathVariable Long serviceId) {
+//        List<FeedbackDTO> feedbacks = serviceService.getFeedbacksByServiceId(serviceId);
+//        return ResponseEntity.ok(feedbacks);
+//    }
 }

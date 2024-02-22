@@ -13,11 +13,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "schedule")
 public class ScheduleDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_ID")
-    private Long scheduleId;
+    private Integer scheduleId;
 
     @Column(name = "working_date")
     private LocalDate workingDate;

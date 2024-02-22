@@ -13,11 +13,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "feedback")
 public class FeedbackDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_ID")
-    private Long feedbackId;
+    private Integer feedbackId;
 
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)

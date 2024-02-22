@@ -43,17 +43,11 @@ public class GuestController {
         return ResponseEntity.noContent().build();
     }
 
-    // Additional endpoint
-    @GetMapping("/account/{accountId}")
-    public ResponseEntity<List<GuestDTO>> getGuestsByAccountId(@PathVariable int accountId) {
-        List<GuestDTO> guests = guestService.getGuestsByAccountId(accountId);
-        return ResponseEntity.ok(guests);
-    }
+//    // Additional endpoint
+//    @GetMapping("/account/{accountId}")
+//    public ResponseEntity<List<GuestDTO>> getGuestsByAccountId(@PathVariable int accountId) {
+//        List<GuestDTO> guests = guestService.getGuestsByAccountId(accountId);
+//        return ResponseEntity.ok(guests);
+//    }
 
-    // Additional endpoints
-    @GetMapping("/{guestId}/feedbacks")
-    public ResponseEntity<List<FeedbackDTO>> getFeedbacksByGuestId(@PathVariable int guestId) {
-        List<FeedbackDTO> feedbacks = feedbackService.getFeedbacksByGuestId(guestId);
-        return ResponseEntity.ok(feedbacks);
-    }
 }

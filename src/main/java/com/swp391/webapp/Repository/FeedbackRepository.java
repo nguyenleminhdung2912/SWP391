@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface FeedbackRepository extends JpaRepository<FeedbackDTO, Integer> {
     // Additional custom queries if needed
-    List<FeedbackDTO> getAllFeedbacksByGuestId(int id);
 }
 

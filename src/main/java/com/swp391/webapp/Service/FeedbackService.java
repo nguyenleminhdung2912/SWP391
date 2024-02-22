@@ -31,9 +31,6 @@ public class FeedbackService {
         feedbackRepository.deleteById(feedbackId);
     }
 
-    public List<FeedbackDTO> getFeedbacksByGuestId(int guestId) {
-        return feedbackRepository.getAllFeedbacksByGuestId(guestId);
-    }
 
     // Additional service methods if needed
 }

@@ -15,7 +15,7 @@ import lombok.Setter;
 @Table(name = "account")
 public class AccountDTO {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id", nullable = false)
     private Integer account_ID;
 

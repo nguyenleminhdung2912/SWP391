@@ -14,7 +14,7 @@ import lombok.Setter;
 @Table(name = "guest")
 public class GuestDTO {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "guest_id", nullable = false)
     private Integer guest_ID;
 
@@ -23,13 +23,13 @@ public class GuestDTO {
     private AccountDTO accountDTO;
 
     @Column(name = "name", nullable = false)
-    private Integer name;
+    private String name;
 
     @Column(name = "phone", nullable = false)
-    private Integer phone;
+    private String phone;
 
     @Column(name = "gender", nullable = false)
-    private Integer gender;
+    private String gender;
 
 //    @Column(name = "picture", nullable = true)
 //    private  guest_ID;

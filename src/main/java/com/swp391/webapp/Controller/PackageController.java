@@ -40,10 +40,10 @@ public class PackageController {
         return ResponseEntity.noContent().build();
     }
 
-    // Additional endpoints
-    @GetMapping("/{packageId}/services")
-    public ResponseEntity<List<ServiceDTO>> getServicesByPackageId(@PathVariable int packageId) {
-        List<ServiceDTO> services = packageService.getServicesByPackageId(packageId);
-        return ResponseEntity.ok(services);
-    }
+//    // Additional endpoints
+//    @GetMapping("/{packageId}/services")
+//    public ResponseEntity<List<ServiceDTO>> getServicesByPackageId(@PathVariable int packageId) {
+//        List<ServiceDTO> services = packageService.getServicesByPackageId(packageId);
+//        return ResponseEntity.ok(services);
+//    }
 }

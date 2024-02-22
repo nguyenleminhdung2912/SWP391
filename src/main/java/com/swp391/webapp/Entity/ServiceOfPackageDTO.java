@@ -11,11 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "serviceofpackage")
 public class ServiceOfPackageDTO {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ServiceOfPackage_ID")
-    private Long serviceOfPackageId;
+    private Integer serviceOfPackageId;
 
     @ManyToOne
     @JoinColumn(name = "package_ID", nullable = false)

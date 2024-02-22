@@ -29,7 +29,7 @@ public class GuestService {
         guestRepository.deleteById(guestId);
     }
 
-    public List<GuestDTO> getGuestsByAccountId(int accountId) {
-        return guestRepository.findByAccountId(accountId);
-    }
+//    public List<GuestDTO> getGuestsByAccountId(int accountId) {
+//        return guestRepository.findByAccountId(accountId);
+//    }
 }

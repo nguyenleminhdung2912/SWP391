@@ -40,16 +40,16 @@ public class HostController {
         return ResponseEntity.noContent().build();
     }
 
-    // Additional endpoints
-    @GetMapping("/{hostId}/services")
-    public ResponseEntity<List<ServiceDTO>> getServicesByHostId(@PathVariable int hostId) {
-        List<ServiceDTO> services = hostService.getServicesByHostId(hostId);
-        return ResponseEntity.ok(services);
-    }
-
-    @GetMapping("/{hostId}/packages")
-    public ResponseEntity<List<ServiceDTO>> getServicesByHostId(@PathVariable int hostId) {
-        List<ServiceDTO> services = hostService.getPackagesByHostId(hostId);
-        return ResponseEntity.ok(services);
-    }
+//    // Additional endpoints
+//    @GetMapping("/{hostId}/services")
+//    public ResponseEntity<List<ServiceDTO>> getServicesByHostId(@PathVariable int hostId) {
+//        List<ServiceDTO> services = hostService.getServicesByHostId(hostId);
+//        return ResponseEntity.ok(services);
+//    }
+//
+//    @GetMapping("/{hostId}/packages")
+//    public ResponseEntity<List<ServiceDTO>> getServicesByHostId(@PathVariable int hostId) {
+//        List<ServiceDTO> services = hostService.getPackagesByHostId(hostId);
+//        return ResponseEntity.ok(services);
+//    }
 }

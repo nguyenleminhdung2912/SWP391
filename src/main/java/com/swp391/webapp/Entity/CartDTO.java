@@ -13,11 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Getter
 @Setter
+@Table(name = "cart")
 public class CartDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Cart_ID")
-    private Long cartId;
+    private Integer cartId;
 
     @ManyToOne
     @JoinColumn(name = "guest_ID")
@@ -25,7 +26,7 @@ public class CartDTO {
 
     @ManyToOne
     @JoinColumn(name = "package_ID")
-    private Package aPackage;
+    private PackageDTO Package;
 
     @Column(name = "quantity")
     private Integer quantity;
