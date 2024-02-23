@@ -6,35 +6,40 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Entity
-@Table(name = "account")
-public class AccountDTO {
+
+@Table(name = "package")
+public class PackageDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "account_ID")
-    private Integer accountID;
+    @Column(name = "package_ID")
+    private Integer packageID;
 
-    @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
-    private String password;
+    @ManyToOne
+    @JoinColumn(name = "account_ID", nullable = false)
+    private AccountDTO account;
 
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
-    private String phone;
+    private BigDecimal price;
 
-    @Column(nullable = false)
-    private String gender;
+    @Column
+    private String description;
 
-    @Column(nullable = false)
-    private String role;
+    @Lob
+    @Column
+    private byte[] picture;
+
+    // Constructors, getters, setters, etc.
 
     // Constructors, getters, setters, etc.
 }
+
