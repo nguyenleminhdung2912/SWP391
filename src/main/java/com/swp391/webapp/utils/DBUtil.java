@@ -1,4 +1,4 @@
-package com.swp391.webapp.DBUtils;
+package com.swp391.webapp.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

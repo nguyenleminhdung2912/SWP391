@@ -1,5 +1,6 @@
 package com.swp391.webapp.Controller;
 
+import com.swp391.webapp.Config.SecuredRestController;
 import com.swp391.webapp.Entity.FeedbackDTO;
 import com.swp391.webapp.Entity.ServiceDTO;
 import com.swp391.webapp.Service.ServiceService;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/services")
-public class ServiceController {
+public class ServiceController implements SecuredRestController {
 
     @Autowired
     private ServiceService serviceService;

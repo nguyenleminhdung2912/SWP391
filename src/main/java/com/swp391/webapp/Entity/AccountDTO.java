@@ -1,10 +1,11 @@
 package com.swp391.webapp.Entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "account")
-public class AccountDTO {
+public class AccountDTO implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_ID")
@@ -27,14 +28,56 @@ public class AccountDTO {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String phone;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String gender;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String role;
+
+    @Column(nullable = true)
+    private String avatar;
+
+    @Transient
+    private String tokens;
+
+    @Transient
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Transient
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Transient
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Transient
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
     // Constructors, getters, setters, etc.
 }
