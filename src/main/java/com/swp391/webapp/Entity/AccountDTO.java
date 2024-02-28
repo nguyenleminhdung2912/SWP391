@@ -40,6 +40,9 @@ public class AccountDTO implements UserDetails {
     @Column(nullable = true)
     private String avatar;
 
+    @Column(nullable = false)
+    private String status;
+
     @Transient
     private String tokens;
 

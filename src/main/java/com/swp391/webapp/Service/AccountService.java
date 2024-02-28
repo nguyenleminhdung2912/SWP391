@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,26 @@ public class AccountService implements UserDetailsService {
 
     public List<AccountDTO> getAllAcounts() {
         return accountRepository.findAll();
+    }
+    public List<AccountDTO> getAllHost() {
+        List<AccountDTO> list = accountRepository.findAll();
+        List<AccountDTO> listTemp = new ArrayList<AccountDTO>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getRole().equals("Host")) {
+                listTemp.add(list.get(i));
+            }
+        }
+        return listTemp;
+    }
+    public List<AccountDTO> getAllGuest() {
+        List<AccountDTO> list = accountRepository.findAll();
+        List<AccountDTO> listTemp = new ArrayList<AccountDTO>();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getRole().equals("Guest")) {
+                listTemp.add(list.get(i));
+            }
+        }
+        return listTemp;
     }
 
     public Optional<AccountDTO> getAccountById(int id) {

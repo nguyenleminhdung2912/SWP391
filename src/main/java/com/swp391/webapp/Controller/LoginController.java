@@ -3,6 +3,7 @@ package com.swp391.webapp.Controller;
 import com.swp391.webapp.Config.SecuredRestController;
 import com.swp391.webapp.Entity.AccountDTO;
 import com.swp391.webapp.Entity.AuthRequest;
+import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
 import com.swp391.webapp.Service.AccountService;
 import com.swp391.webapp.Service.JWTService;
 import com.swp391.webapp.utils.AccountUtils;
@@ -33,6 +34,9 @@ public class LoginController implements SecuredRestController {
 
     @Autowired
     AccountUtils accountUtils;
+
+    @Autowired
+    MailController mailController = new MailController();
 
     @GetMapping("/welcome")
     public String welcome() {
@@ -69,6 +73,17 @@ public class LoginController implements SecuredRestController {
     public List<AccountDTO> getAllUsers(){
         return accountService.getAllAcounts();
     }
+
+    @GetMapping("/getAllHost")
+    public List<AccountDTO> getAllHost(){
+        return accountService.getAllHost();
+    }
+
+    @GetMapping("/getAllGuest")
+    public List<AccountDTO> getAllGuest(){
+        return accountService.getAllGuest();
+    }
+
     @GetMapping("/getUser/{id}")
     public Optional<AccountDTO> getAllUsers(@PathVariable Integer id){
         return accountService.getAccountById(id);
@@ -76,7 +91,16 @@ public class LoginController implements SecuredRestController {
 
     @PostMapping("/register")
     public AccountDTO addAccount(@RequestBody AccountDTO accountDTO){
-        return accountService.saveAccount(accountDTO);
+        List<AccountDTO> listAccount = accountService.getAllAcounts();
+        for (AccountDTO account : listAccount) {
+            if (account.getEmail().equals(accountDTO.getEmail())) {
+                throw new RuntimeException(new AlreadyExistedException("This email has been registered, please log in!"));
+            }
+        }
+        accountDTO.setStatus("Inactivated");
+        accountService.saveAccount(accountDTO);
+        mailController.sendMail(accountDTO);
+        return accountDTO;
     }
 
     @DeleteMapping("/{accountId}")
