@@ -7,6 +7,7 @@ import com.swp391.webapp.Entity.WalletDTO;
 import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
 import com.swp391.webapp.Service.AccountService;
 import com.swp391.webapp.Service.JWTService;
+import com.swp391.webapp.Service.WalletService;
 import com.swp391.webapp.utils.AccountUtils;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,9 @@ public class LoginController implements SecuredRestController {
     @Autowired
     private JWTService jwtService;
     @Autowired
-    private WalletController walletController;
-
+    private WalletService walletService;
     @Autowired
     AccountUtils accountUtils;
-
     @Autowired
     MailController mailController = new MailController();
 
@@ -51,11 +50,6 @@ public class LoginController implements SecuredRestController {
 
     @PostMapping("/login")
     public AccountDTO login(@RequestBody AccountDTO accountDTO)  {
-        System.out.println("-----------------------");
-        System.out.println("Login information:");
-        System.out.println("Email: "+ accountDTO.getEmail());
-        System.out.println("Passowrd: "+ accountDTO.getPassword());
-        System.out.println("-----------------------");
         Authentication authentication = null;
         try{
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(accountDTO.getEmail(), accountDTO.getPassword()));
@@ -108,17 +102,13 @@ public class LoginController implements SecuredRestController {
         mailController.sendMail(accountDTO);
         BigDecimal a = new BigDecimal("0");
         WalletDTO walletDTO = new WalletDTO(accountDTO, a);
-        walletController.createWallet(walletDTO);
+        walletService.saveWallet(walletDTO);
         return accountDTO;
     }
 
-    @GetMapping("/verified")
-    public String verifyAccount() {
-        return mailController.activateAccount();
-    }
-
-    @DeleteMapping("/{accountId}")
+    @DeleteMapping("/delete/{accountId}")
     public ResponseEntity<Void> deleteAccount(@PathVariable int accountId) {
+        walletService.deleteWalletByAccountID(accountId);
         accountService.deleteAccount(accountId);
         return ResponseEntity.noContent().build();
     }
@@ -127,4 +117,13 @@ public class LoginController implements SecuredRestController {
     public ResponseEntity getProfile(){
         return ResponseEntity.ok(accountUtils.getCurrentAccount());
     }
+
+    @PostMapping("/verify/{email}")
+    public ResponseEntity activateHostAccount(@PathVariable String email) {
+        AccountDTO accountDTO = accountService.loadUserByUsername(email);
+        accountDTO.setStatus("Activated");
+        mailController.sendHostCongrats(accountDTO);
+        return ResponseEntity.ok(accountService.saveAccount(accountDTO));
+    }
+
 }

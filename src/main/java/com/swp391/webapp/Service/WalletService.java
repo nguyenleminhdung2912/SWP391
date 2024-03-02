@@ -29,5 +29,13 @@ public class WalletService {
     public void deleteWallet(Integer walletId) {
         walletRepository.deleteById(walletId);
     }
+    public void deleteWalletByAccountID(Integer id) {
+        List<WalletDTO> list = walletRepository.findAll();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getAccount().getAccountID() == id) {
+                walletRepository.deleteById(list.get(i).getWalletID());
+            }
+        }
+    }
 }
 

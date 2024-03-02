@@ -25,10 +25,35 @@ public class EmailService {
 
             context.setVariable("name", emailDetail.getName());
 
-            context.setVariable("link", "https://google.com");
+            String link = "http://localhost:8080/auth/verify/" + emailDetail.getRecipient();
+
+            context.setVariable("link", link);
 
 
             String text = templateEngine.process("emailtemplate", context);
+
+            // Creating a simple mail message
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+
+            // Setting up necessary details
+            mimeMessageHelper.setFrom("admin@gmail.com");
+            mimeMessageHelper.setTo(emailDetail.getRecipient());
+            mimeMessageHelper.setText(text, true);
+            mimeMessageHelper.setSubject(emailDetail.getSubject());
+            javaMailSender.send(mimeMessage);
+        }catch (MessagingException messagingException){
+            messagingException.printStackTrace();
+        }
+    }
+
+    public void sendCongratsHostTemplate(EmailDetail emailDetail){
+        try{
+            Context context = new Context();
+
+            context.setVariable("name", emailDetail.getName());
+
+            String text = templateEngine.process("emailtemplate2", context);
 
             // Creating a simple mail message
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();

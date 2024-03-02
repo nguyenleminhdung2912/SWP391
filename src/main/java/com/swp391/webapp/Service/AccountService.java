@@ -38,6 +38,7 @@ public class AccountService implements UserDetailsService {
     public List<AccountDTO> getAllAcounts() {
         return accountRepository.findAll();
     }
+
     public List<AccountDTO> getAllHost() {
         List<AccountDTO> list = accountRepository.findAll();
         List<AccountDTO> listTemp = new ArrayList<AccountDTO>();
@@ -48,6 +49,7 @@ public class AccountService implements UserDetailsService {
         }
         return listTemp;
     }
+
     public List<AccountDTO> getAllGuest() {
         List<AccountDTO> list = accountRepository.findAll();
         List<AccountDTO> listTemp = new ArrayList<AccountDTO>();
@@ -66,6 +68,5 @@ public class AccountService implements UserDetailsService {
     public void deleteAccount(int accountId) {
         accountRepository.deleteById(accountId);
     }
-
 
 }

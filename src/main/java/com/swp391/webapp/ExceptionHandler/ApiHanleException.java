@@ -11,4 +11,9 @@ public class ApiHanleException {
     public ResponseEntity<?> alreadyExist(AlreadyExistedException exception) {
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.ALREADY_REPORTED);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> alreadyExist(Exception exception) {
+        return new ResponseEntity<String>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

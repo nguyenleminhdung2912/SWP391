@@ -7,7 +7,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

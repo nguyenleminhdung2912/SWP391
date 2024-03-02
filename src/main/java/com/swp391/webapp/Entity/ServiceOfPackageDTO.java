@@ -15,7 +15,7 @@ import lombok.Setter;
 public class ServiceOfPackageDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "service_of_package_ID")
+    @Column(name = "service_of_package_id")
     private Integer serviceOfPackageID;
 
     @ManyToOne

@@ -39,6 +39,20 @@ public class MailController {
         }
     }
 
+    public void sendHostCongrats(AccountDTO accountDTO) {
+        try {
+            Optional<AccountDTO> account = accountService.getAccountById(accountDTO.getAccountID());
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setSubject("Congratulation!");
+            emailDetail.setMsgBody("Your account has been verified!");
+            emailDetail.setName(accountDTO.getName());
+            emailService.sendCongratsHostTemplate(emailDetail);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public String activateAccount(){
         return "Verified";
     }

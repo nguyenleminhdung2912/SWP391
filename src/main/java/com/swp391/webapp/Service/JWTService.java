@@ -16,10 +16,11 @@ public class JWTService {
 
     public String generateToken(String email) {
         Map<String, Objects> claims = new HashMap<>();
+        Date now = new Date();
         return Jwts.builder()
                 .setSubject(email)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
+                .setIssuedAt(new Date(now.getTime()))
+                .setExpiration(new Date(now.getTime() + 1000 * 60 * 60 * 24 * 30))
                 .signWith(SignatureAlgorithm.HS256, SECRET).compact();
     }
 

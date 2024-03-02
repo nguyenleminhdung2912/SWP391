@@ -34,9 +34,8 @@ public class ServiceDTO {
     @Column
     private String description;
 
-    @Lob
     @Column
-    private byte[] picture;
+    private String picture;
 
     // Constructors, getters, setters, etc.
 }
