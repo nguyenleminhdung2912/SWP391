@@ -27,6 +27,11 @@ public class WalletDTO {
     @Column(name = "total_money")
     private BigDecimal totalMoney;
 
+    public WalletDTO(AccountDTO account, BigDecimal totalMoney) {
+        this.account = account;
+        this.totalMoney = totalMoney;
+    }
+
     // Constructors, getters, setters, etc.
 }
 

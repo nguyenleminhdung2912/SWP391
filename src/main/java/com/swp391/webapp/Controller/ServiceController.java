@@ -1,9 +1,10 @@
 package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Config.SecuredRestController;
-import com.swp391.webapp.Entity.FeedbackDTO;
+import com.swp391.webapp.Entity.AccountDTO;
 import com.swp391.webapp.Entity.ServiceDTO;
 import com.swp391.webapp.Service.ServiceService;
+import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ public class ServiceController implements SecuredRestController {
 
     @Autowired
     private ServiceService serviceService;
+    @Autowired
+    AccountUtils accountUtils;
 
     @GetMapping
     public ResponseEntity<List<ServiceDTO>> getAllServices() {
@@ -40,6 +43,12 @@ public class ServiceController implements SecuredRestController {
     public ResponseEntity<Void> deleteService(@PathVariable int serviceId) {
         serviceService.deleteService(serviceId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/host")
+    public ResponseEntity<List<ServiceDTO>> getServicesByHostID() {
+        AccountDTO accountDTO = accountUtils.getCurrentAccount();
+        return ResponseEntity.ok(serviceService.getServicesByHostID(accountDTO));
     }
 
     // Additional endpoints

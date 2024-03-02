@@ -32,9 +32,14 @@ public class MailController {
             emailDetail.setRecipient(account.get().getEmail());
             emailDetail.setSubject("test123");
             emailDetail.setMsgBody("Test send vertify mail");
+            emailDetail.setName(accountDTO.getName());
             emailService.sendMailTemplate(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public String activateAccount(){
+        return "Verified";
     }
 }

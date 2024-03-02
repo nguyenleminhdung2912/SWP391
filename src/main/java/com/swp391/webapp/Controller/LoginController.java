@@ -3,6 +3,7 @@ package com.swp391.webapp.Controller;
 import com.swp391.webapp.Config.SecuredRestController;
 import com.swp391.webapp.Entity.AccountDTO;
 import com.swp391.webapp.Entity.AuthRequest;
+import com.swp391.webapp.Entity.WalletDTO;
 import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
 import com.swp391.webapp.Service.AccountService;
 import com.swp391.webapp.Service.JWTService;
@@ -17,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +33,16 @@ public class LoginController implements SecuredRestController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JWTService jwtService;
+    @Autowired
+    private WalletController walletController;
 
     @Autowired
     AccountUtils accountUtils;
 
     @Autowired
     MailController mailController = new MailController();
+
+
 
     @GetMapping("/welcome")
     public String welcome() {
@@ -100,7 +106,15 @@ public class LoginController implements SecuredRestController {
         accountDTO.setStatus("Inactivated");
         accountService.saveAccount(accountDTO);
         mailController.sendMail(accountDTO);
+        BigDecimal a = new BigDecimal("0");
+        WalletDTO walletDTO = new WalletDTO(accountDTO, a);
+        walletController.createWallet(walletDTO);
         return accountDTO;
+    }
+
+    @GetMapping("/verified")
+    public String verifyAccount() {
+        return mailController.activateAccount();
     }
 
     @DeleteMapping("/{accountId}")
