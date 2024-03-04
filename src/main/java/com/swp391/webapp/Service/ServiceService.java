@@ -1,7 +1,6 @@
 package com.swp391.webapp.Service;
 
-import com.swp391.webapp.Entity.AccountDTO;
-import com.swp391.webapp.Entity.ServiceDTO;
+import com.swp391.webapp.Entity.ServiceEntity;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Repository.ServiceOfPackageRepository;
 import com.swp391.webapp.Repository.ServiceRepository;
@@ -23,12 +22,12 @@ public class ServiceService {
 
     // Service methods for Service entity
 
-    public List<ServiceDTO> getAllServices() {
+    public List<ServiceEntity> getAllServices() {
         return serviceRepository.findAll();
     }
-    public List<ServiceDTO> getServicesByHostID(int id) {
-        List<ServiceDTO> list = serviceRepository.findAll();
-        List<ServiceDTO> listTemp = new ArrayList<>();
+    public List<ServiceEntity> getServicesByHostID(int id) {
+        List<ServiceEntity> list = serviceRepository.findAll();
+        List<ServiceEntity> listTemp = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getAccount().getAccountID().equals(id)) {
                 listTemp.add(list.get(i));
@@ -37,23 +36,27 @@ public class ServiceService {
         return listTemp;
     }
 
-    public ServiceDTO getServiceById(int serviceId) {
+    public ServiceEntity getServiceById(int serviceId) {
         return serviceRepository.findById(serviceId).orElse(null);
     }
+    public ServiceEntity getServiceByPackageId(int packageId) {
+        return serviceRepository.findById(packageId).orElse(null);
+    }
 
-    public ServiceDTO saveService(ServiceDTO service) {
+    public ServiceEntity saveService(ServiceEntity service) {
         return serviceRepository.save(service);
     }
 
     public void deleteService(int serviceId) {
+        serviceOfPackageRepository.deleteById(serviceId);
         serviceRepository.deleteById(serviceId);
     }
 
-    public ServiceDTO updateEachFieldById(int id, Map<String, Objects> fields) {
-        Optional<ServiceDTO> existingUser = serviceRepository.findById(id);
+    public ServiceEntity updateEachFieldById(int id, Map<String, Objects> fields) {
+        Optional<ServiceEntity> existingUser = serviceRepository.findById(id);
         if (existingUser.isPresent()) {
             fields.forEach((key, value) -> {
-                Field field = ReflectionUtils.findField(ServiceDTO.class, key);
+                Field field = ReflectionUtils.findField(ServiceEntity.class, key);
                 field.setAccessible(true);
                 ReflectionUtils.setField(field, existingUser.get(), value);
             });
@@ -62,13 +65,13 @@ public class ServiceService {
         return null;
     }
 
-    public ServiceDTO updateServiceByID(int id, ServiceDTO serviceDTO) {
-        ServiceDTO current = serviceRepository.findById(id).get();
-        current.setAccount(serviceDTO.getAccount());
-        current.setPrice(serviceDTO.getPrice());
-        current.setName(serviceDTO.getName());
-        current.setDescription(serviceDTO.getDescription());
-        current.setPicture(serviceDTO.getPicture());
+    public ServiceEntity updateServiceByID(int id, ServiceEntity serviceEntity) {
+        ServiceEntity current = serviceRepository.findById(id).get();
+        current.setAccount(serviceEntity.getAccount());
+        current.setPrice(serviceEntity.getPrice());
+        current.setName(serviceEntity.getName());
+        current.setDescription(serviceEntity.getDescription());
+        current.setPicture(serviceEntity.getPicture());
         return serviceRepository.save(current);
     }
 

@@ -1,6 +1,6 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.AccountDTO;
+import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +17,20 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
-        List<AccountDTO> accounts = accountService.getAllAcounts();
+    public ResponseEntity<List<AccountEntity>> getAllAccounts() {
+        List<AccountEntity> accounts = accountService.getAllAcounts();
         return ResponseEntity.ok(accounts);
     }
 
     @GetMapping("/{accountId}")
-    public ResponseEntity<Optional<AccountDTO>> getAccountById(@PathVariable int accountId) {
-        Optional<AccountDTO> account = accountService.getAccountById(accountId);
+    public ResponseEntity<Optional<AccountEntity>> getAccountById(@PathVariable int accountId) {
+        Optional<AccountEntity> account = accountService.getAccountById(accountId);
         return ResponseEntity.ok(account);
     }
 
     @PostMapping
-    public ResponseEntity<AccountDTO> saveAccount(@RequestBody AccountDTO account) {
-        AccountDTO savedAccount = accountService.saveAccount(account);
+    public ResponseEntity<AccountEntity> saveAccount(@RequestBody AccountEntity account) {
+        AccountEntity savedAccount = accountService.saveAccount(account);
         return ResponseEntity.ok(savedAccount);
     }
 

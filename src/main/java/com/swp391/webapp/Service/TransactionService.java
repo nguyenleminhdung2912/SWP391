@@ -1,6 +1,6 @@
 package com.swp391.webapp.Service;
 
-import com.swp391.webapp.Entity.TransactionDTO;
+import com.swp391.webapp.Entity.TransactionEntity;
 import com.swp391.webapp.Repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,15 +14,15 @@ public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    public List<TransactionDTO> getAllTransactions() {
+    public List<TransactionEntity> getAllTransactions() {
         return transactionRepository.findAll();
     }
 
-    public Optional<TransactionDTO> getTransactionById(int transactionId) {
+    public Optional<TransactionEntity> getTransactionById(int transactionId) {
         return transactionRepository.findById(transactionId);
     }
 
-    public void saveTransaction(TransactionDTO transaction) {
+    public void saveTransaction(TransactionEntity transaction) {
         transactionRepository.save(transaction);
     }
 

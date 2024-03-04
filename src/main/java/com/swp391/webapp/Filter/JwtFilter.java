@@ -1,6 +1,6 @@
 package com.swp391.webapp.Filter;
 
-import com.swp391.webapp.Entity.AccountDTO;
+import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Service.AccountService;
 import com.swp391.webapp.Service.JWTService;
 import jakarta.servlet.FilterChain;
@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -38,9 +37,9 @@ public class JwtFilter extends OncePerRequestFilter {
             userName =jwtService.extractEmail(token);
         }
         if(userName !=null && SecurityContextHolder.getContext().getAuthentication()==null){
-            AccountDTO accountDTO = accountService.loadUserByUsername(userName);
-            if(jwtService.validateToken(token,accountDTO)){
-                UsernamePasswordAuthenticationToken authToken =  new UsernamePasswordAuthenticationToken(accountDTO,null,accountDTO.getAuthorities());
+            AccountEntity accountEntity = accountService.loadUserByUsername(userName);
+            if(jwtService.validateToken(token, accountEntity)){
+                UsernamePasswordAuthenticationToken authToken =  new UsernamePasswordAuthenticationToken(accountEntity,null, accountEntity.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

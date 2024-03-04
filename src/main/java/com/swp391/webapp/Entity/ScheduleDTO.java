@@ -23,7 +23,7 @@ public class ScheduleDTO {
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
-    private AccountDTO account;
+    private AccountEntity account;
 
     @Column(name = "working_date")
     private LocalDate workingDate;

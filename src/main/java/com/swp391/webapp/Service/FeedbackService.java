@@ -1,6 +1,6 @@
 package com.swp391.webapp.Service;
 
-import com.swp391.webapp.Entity.FeedbackDTO;
+import com.swp391.webapp.Entity.FeedbackEntity;
 import com.swp391.webapp.Repository.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,15 @@ public class FeedbackService {
 
     // Service methods for Feedback entity
 
-    public List<FeedbackDTO> getAllFeedbacks() {
+    public List<FeedbackEntity> getAllFeedbacks() {
         return feedbackRepository.findAll();
     }
 
-    public FeedbackDTO getFeedbackById(int feedbackId) {
+    public FeedbackEntity getFeedbackById(int feedbackId) {
         return feedbackRepository.findById(feedbackId).orElse(null);
     }
 
-    public FeedbackDTO saveFeedback(FeedbackDTO feedback) {
+    public FeedbackEntity saveFeedback(FeedbackEntity feedback) {
         return feedbackRepository.save(feedback);
     }
 

@@ -1,18 +1,16 @@
 package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Config.SecuredRestController;
-import com.swp391.webapp.Entity.AccountDTO;
-import com.swp391.webapp.Entity.AuthRequest;
+import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Entity.WalletDTO;
 import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
 import com.swp391.webapp.Service.AccountService;
 import com.swp391.webapp.Service.JWTService;
 import com.swp391.webapp.Service.WalletService;
+import com.swp391.webapp.dto.LoginRequestDTO;
 import com.swp391.webapp.utils.AccountUtils;
-import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,18 +49,17 @@ public class LoginController implements SecuredRestController {
     }
 
     @PostMapping("/login")
-    public AccountDTO login(@RequestBody AccountDTO accountDTO)  {
+    public AccountEntity login(@RequestBody LoginRequestDTO loginRequestDTO)  {
         Authentication authentication = null;
         try{
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(accountDTO.getEmail(), accountDTO.getPassword()));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
             System.out.println(authentication);
         }catch (Exception e){
             e.printStackTrace();
         }
         if (authentication != null && authentication.isAuthenticated()) {
-            System.out.println("Token: "+ jwtService.generateToken(accountDTO.getEmail()));
-            AccountDTO account = accountService.loadUserByUsername(accountDTO.getEmail());
-            account.setTokens(jwtService.generateToken(accountDTO.getEmail()));
+            AccountEntity account = (AccountEntity) authentication.getPrincipal();
+            account.setTokens(jwtService.generateToken(account.getEmail()));
             return account;
             //return jwtService.generateToken(authRequest.getEmail());
         } else {
@@ -72,40 +69,40 @@ public class LoginController implements SecuredRestController {
     }
 
     @GetMapping("/getAlluser")
-    public List<AccountDTO> getAllUsers(){
+    public List<AccountEntity> getAllUsers(){
         return accountService.getAllAcounts();
     }
 
     @GetMapping("/getAllHost")
-    public List<AccountDTO> getAllHost(){
+    public List<AccountEntity> getAllHost(){
         return accountService.getAllHost();
     }
 
     @GetMapping("/getAllGuest")
-    public List<AccountDTO> getAllGuest(){
+    public List<AccountEntity> getAllGuest(){
         return accountService.getAllGuest();
     }
 
     @GetMapping("/getUser/{id}")
-    public Optional<AccountDTO> getAllUsers(@PathVariable Integer id){
+    public Optional<AccountEntity> getAllUsers(@PathVariable Integer id){
         return accountService.getAccountById(id);
     }
 
     @PostMapping("/register")
-    public AccountDTO addAccount(@RequestBody AccountDTO accountDTO){
-        List<AccountDTO> listAccount = accountService.getAllAcounts();
-        for (AccountDTO account : listAccount) {
-            if (account.getEmail().equals(accountDTO.getEmail())) {
+    public AccountEntity addAccount(@RequestBody AccountEntity accountEntity){
+        List<AccountEntity> listAccount = accountService.getAllAcounts();
+        for (AccountEntity account : listAccount) {
+            if (account.getEmail().equals(accountEntity.getEmail())) {
                 throw new RuntimeException(new AlreadyExistedException("This email has been registered, please log in!"));
             }
         }
-        accountDTO.setStatus("Inactivated");
-        accountService.saveAccount(accountDTO);
-        mailController.sendMail(accountDTO);
+        accountEntity.setStatus("Inactivated");
+        accountService.saveAccount(accountEntity);
+        mailController.sendMail(accountEntity);
         BigDecimal a = new BigDecimal("0");
-        WalletDTO walletDTO = new WalletDTO(accountDTO, a);
+        WalletDTO walletDTO = new WalletDTO(accountEntity, a);
         walletService.saveWallet(walletDTO);
-        return accountDTO;
+        return accountEntity;
     }
 
     @DeleteMapping("/delete/{accountId}")
@@ -122,19 +119,19 @@ public class LoginController implements SecuredRestController {
 
     @PostMapping("/verify/{email}")
     public ResponseEntity activateHostAccount(@PathVariable String email) {
-        AccountDTO accountDTO = accountService.loadUserByUsername(email);
-        accountDTO.setStatus("Activated");
-        mailController.sendHostCongrats(accountDTO);
-        return ResponseEntity.ok(accountService.saveAccount(accountDTO));
+        AccountEntity accountEntity = accountService.loadUserByUsername(email);
+        accountEntity.setStatus("Activated");
+        mailController.sendHostCongrats(accountEntity);
+        return ResponseEntity.ok(accountService.saveAccount(accountEntity));
     }
 
     @PatchMapping("/{id}")
-    public AccountDTO updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
+    public AccountEntity updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
         return accountService.updateEachFieldById(id, fields);
     }
 
     @PutMapping("/{id}")
-    public AccountDTO getUserById(@PathVariable int id, @RequestBody AccountDTO account) {
+    public AccountEntity getUserById(@PathVariable int id, @RequestBody AccountEntity account) {
         return accountService.updateAccountByID(id, account);
     }
 

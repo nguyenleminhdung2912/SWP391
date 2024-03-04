@@ -6,33 +6,39 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
-@Entity
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "feedback")
-public class FeedbackDTO {
+@Entity
+@Table(name = "service")
+public class ServiceEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "feedback_ID")
-    private Integer feedbackID;
+    @Column(name = "service_ID")
+    private Integer serviceID;
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
-    private AccountDTO account;
+    private AccountEntity account;
 
-    @ManyToOne
-    @JoinColumn(name = "service_ID", nullable = false)
-    private ServiceDTO service;
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private BigDecimal price;
 
     @Column
     private String description;
 
-    @Column(name = "feedback_date")
-    private LocalDate feedbackDate;
+    @Column
+    private String picture;
+
+    @Column
+    private boolean isDeleted = false;
 
     // Constructors, getters, setters, etc.
 }

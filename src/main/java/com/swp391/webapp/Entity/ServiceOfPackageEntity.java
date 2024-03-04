@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "serviceofpackage")
-public class ServiceOfPackageDTO {
+public class ServiceOfPackageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "service_of_package_id")
@@ -20,11 +20,11 @@ public class ServiceOfPackageDTO {
 
     @ManyToOne
     @JoinColumn(name = "package_ID", nullable = false)
-    private PackageDTO packageDTO;
+    private PackageEntity packageEntity;
 
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)
-    private ServiceDTO service;
+    private ServiceEntity service;
 
 
 

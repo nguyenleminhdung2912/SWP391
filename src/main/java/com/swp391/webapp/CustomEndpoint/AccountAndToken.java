@@ -1,6 +1,6 @@
 package com.swp391.webapp.CustomEndpoint;
 
-import com.swp391.webapp.Entity.AccountDTO;
+import com.swp391.webapp.Entity.AccountEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AccountAndToken {
-    AccountDTO accountDTO;
+    AccountEntity accountEntity;
     String tokens;
 }
