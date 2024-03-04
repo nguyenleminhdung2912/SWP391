@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @CrossOrigin("*")
@@ -45,10 +47,19 @@ public class ServiceController implements SecuredRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/host")
-    public ResponseEntity<List<ServiceDTO>> getServicesByHostID() {
-        AccountDTO accountDTO = accountUtils.getCurrentAccount();
-        return ResponseEntity.ok(serviceService.getServicesByHostID(accountDTO));
+    @GetMapping("/host/{hostID}")
+    public ResponseEntity<List<ServiceDTO>> getServicesByHostID(@PathVariable int hostID) {
+        return ResponseEntity.ok(serviceService.getServicesByHostID(hostID));
+    }
+
+    @PatchMapping("/{id}")
+    public ServiceDTO updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
+        return serviceService.updateEachFieldById(id, fields);
+    }
+
+    @PutMapping("/{id}")
+    public ServiceDTO updateServiceById(@PathVariable int id, @RequestBody ServiceDTO serviceDTO) {
+        return serviceService.updateServiceByID(id, serviceDTO);
     }
 
     // Additional endpoints

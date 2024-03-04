@@ -8,10 +8,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Field;
+import java.util.*;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -69,4 +69,29 @@ public class AccountService implements UserDetailsService {
         accountRepository.deleteById(accountId);
     }
 
+    public AccountDTO updateEachFieldById(int id, Map<String, Objects> fields) {
+        Optional<AccountDTO> existingUser = accountRepository.findById(id);
+        if (existingUser.isPresent()) {
+            fields.forEach((key, value) -> {
+                Field field = ReflectionUtils.findField(AccountDTO.class, key);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, existingUser.get(), value);
+            });
+            return accountRepository.save(existingUser.get());
+        }
+        return null;
+    }
+
+    public AccountDTO updateAccountByID(int id, AccountDTO accountUpdate) {
+        AccountDTO existing = accountRepository.findById(id).get();
+        existing.setEmail(accountUpdate.getEmail());
+        existing.setPassword(accountUpdate.getPassword());
+        existing.setName(accountUpdate.getName());
+        existing.setPhone(accountUpdate.getPhone());
+        existing.setGender(accountUpdate.getGender());
+        existing.setRole(accountUpdate.getRole());
+        existing.setAvatar(accountUpdate.getAvatar());
+        existing.setStatus(accountUpdate.getStatus());
+        return accountRepository.save(existing);
+    }
 }

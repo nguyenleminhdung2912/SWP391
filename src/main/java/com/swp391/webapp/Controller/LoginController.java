@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -124,6 +126,16 @@ public class LoginController implements SecuredRestController {
         accountDTO.setStatus("Activated");
         mailController.sendHostCongrats(accountDTO);
         return ResponseEntity.ok(accountService.saveAccount(accountDTO));
+    }
+
+    @PatchMapping("/{id}")
+    public AccountDTO updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
+        return accountService.updateEachFieldById(id, fields);
+    }
+
+    @PutMapping("/{id}")
+    public AccountDTO getUserById(@PathVariable int id, @RequestBody AccountDTO account) {
+        return accountService.updateAccountByID(id, account);
     }
 
 }

@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -40,6 +42,11 @@ public class PackageController {
     public ResponseEntity<Void> deletePackage(@PathVariable int packageId) {
         packageService.deletePackage(packageId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public PackageDTO updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
+        return packageService.updateEachFieldById(id, fields);
     }
 
 //    // Additional endpoints
