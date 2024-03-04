@@ -24,7 +24,7 @@ public class Order_Detail_DTO {
 
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)
-    private ServiceDTO service;
+    private ServiceEntity service;
 
     // Constructors, getters, setters, etc.
 }

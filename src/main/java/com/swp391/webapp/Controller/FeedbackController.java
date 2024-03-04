@@ -1,6 +1,6 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.FeedbackDTO;
+import com.swp391.webapp.Entity.FeedbackEntity;
 import com.swp391.webapp.Service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,21 +17,21 @@ public class FeedbackController {
     private FeedbackService FeedbackDTOService;
 
     @GetMapping
-    public ResponseEntity<List<FeedbackDTO>> getAllFeedbackDTOs() {
-        List<FeedbackDTO> FeedbackDTOs = FeedbackDTOService.getAllFeedbacks();
-        return ResponseEntity.ok(FeedbackDTOs);
+    public ResponseEntity<List<FeedbackEntity>> getAllFeedbackDTOs() {
+        List<FeedbackEntity> feedbackEntities = FeedbackDTOService.getAllFeedbacks();
+        return ResponseEntity.ok(feedbackEntities);
     }
 
     @GetMapping("/{FeedbackDTOId}")
-    public ResponseEntity<FeedbackDTO> getFeedbackDTOById(@PathVariable int FeedbackId) {
-        FeedbackDTO FeedbackDTO = FeedbackDTOService.getFeedbackById(FeedbackId);
-        return ResponseEntity.ok(FeedbackDTO);
+    public ResponseEntity<FeedbackEntity> getFeedbackDTOById(@PathVariable int FeedbackId) {
+        FeedbackEntity FeedbackEntity = FeedbackDTOService.getFeedbackById(FeedbackId);
+        return ResponseEntity.ok(FeedbackEntity);
     }
 
     @PostMapping
-    public ResponseEntity<FeedbackDTO> saveFeedbackDTO(@RequestBody FeedbackDTO feedbackDTO) {
-        FeedbackDTO savedFeedbackDTO = FeedbackDTOService.saveFeedback(feedbackDTO);
-        return ResponseEntity.ok(savedFeedbackDTO);
+    public ResponseEntity<FeedbackEntity> saveFeedbackDTO(@RequestBody FeedbackEntity feedbackEntity) {
+        FeedbackEntity savedFeedbackEntity = FeedbackDTOService.saveFeedback(feedbackEntity);
+        return ResponseEntity.ok(savedFeedbackEntity);
     }
 
     @DeleteMapping("/{FeedbackDTOId}")

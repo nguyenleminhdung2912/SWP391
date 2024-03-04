@@ -1,8 +1,7 @@
 package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Config.SecuredRestController;
-import com.swp391.webapp.Entity.AccountDTO;
-import com.swp391.webapp.Entity.ServiceDTO;
+import com.swp391.webapp.Entity.ServiceEntity;
 import com.swp391.webapp.Service.ServiceService;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +23,20 @@ public class ServiceController implements SecuredRestController {
     AccountUtils accountUtils;
 
     @GetMapping
-    public ResponseEntity<List<ServiceDTO>> getAllServices() {
-        List<ServiceDTO> services = serviceService.getAllServices();
+    public ResponseEntity<List<ServiceEntity>> getAllServices() {
+        List<ServiceEntity> services = serviceService.getAllServices();
         return ResponseEntity.ok(services);
     }
 
     @GetMapping("/{serviceId}")
-    public ResponseEntity<ServiceDTO> getServiceById(@PathVariable int serviceId) {
-        ServiceDTO service = serviceService.getServiceById(serviceId);
+    public ResponseEntity<ServiceEntity> getServiceById(@PathVariable int serviceId) {
+        ServiceEntity service = serviceService.getServiceById(serviceId);
         return ResponseEntity.ok(service);
     }
 
     @PostMapping
-    public ResponseEntity<ServiceDTO> saveService(@RequestBody ServiceDTO service) {
-        ServiceDTO savedService = serviceService.saveService(service);
+    public ResponseEntity<ServiceEntity> saveService(@RequestBody ServiceEntity service) {
+        ServiceEntity savedService = serviceService.saveService(service);
         return ResponseEntity.ok(savedService);
     }
 
@@ -48,18 +47,18 @@ public class ServiceController implements SecuredRestController {
     }
 
     @GetMapping("/host/{hostID}")
-    public ResponseEntity<List<ServiceDTO>> getServicesByHostID(@PathVariable int hostID) {
+    public ResponseEntity<List<ServiceEntity>> getServicesByHostID(@PathVariable int hostID) {
         return ResponseEntity.ok(serviceService.getServicesByHostID(hostID));
     }
 
     @PatchMapping("/{id}")
-    public ServiceDTO updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
+    public ServiceEntity updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
         return serviceService.updateEachFieldById(id, fields);
     }
 
     @PutMapping("/{id}")
-    public ServiceDTO updateServiceById(@PathVariable int id, @RequestBody ServiceDTO serviceDTO) {
-        return serviceService.updateServiceByID(id, serviceDTO);
+    public ServiceEntity updateServiceById(@PathVariable int id, @RequestBody ServiceEntity serviceEntity) {
+        return serviceService.updateServiceByID(id, serviceEntity);
     }
 
     // Additional endpoints

@@ -22,12 +22,12 @@ public class WalletDTO {
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
-    private AccountDTO account;
+    private AccountEntity account;
 
     @Column(name = "total_money")
     private BigDecimal totalMoney;
 
-    public WalletDTO(AccountDTO account, BigDecimal totalMoney) {
+    public WalletDTO(AccountEntity account, BigDecimal totalMoney) {
         this.account = account;
         this.totalMoney = totalMoney;
     }

@@ -19,9 +19,9 @@ public class VerifyToken {
 
     private String token;
 
-    @OneToOne(targetEntity = AccountDTO.class, fetch = FetchType.EAGER)
+    @OneToOne(targetEntity = AccountEntity.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    private AccountDTO user;
+    private AccountEntity user;
 
     private Date expiryDate;
 

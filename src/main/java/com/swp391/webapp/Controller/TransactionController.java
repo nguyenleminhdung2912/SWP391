@@ -1,6 +1,6 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.TransactionDTO;
+import com.swp391.webapp.Entity.TransactionEntity;
 import com.swp391.webapp.Service.TransactionService;
 import org.springframework.beans.factory.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -17,26 +17,26 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @GetMapping
-    public ResponseEntity<List<TransactionDTO>> getAllTransactions() {
-        List<TransactionDTO> transactions = transactionService.getAllTransactions();
+    public ResponseEntity<List<TransactionEntity>> getAllTransactions() {
+        List<TransactionEntity> transactions = transactionService.getAllTransactions();
         return ResponseEntity.ok(transactions);
     }
 
     @GetMapping("/{transactionId}")
-    public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable int transactionId) {
+    public ResponseEntity<TransactionEntity> getTransactionById(@PathVariable int transactionId) {
         return transactionService.getTransactionById(transactionId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transaction) {
+    public ResponseEntity<TransactionEntity> createTransaction(@RequestBody TransactionEntity transaction) {
         transactionService.saveTransaction(transaction);
         return ResponseEntity.ok(transaction);
     }
 
     @PutMapping("/{transactionId}")
-    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable int transactionId, @RequestBody TransactionDTO updatedTransaction) {
+    public ResponseEntity<TransactionEntity> updateTransaction(@PathVariable int transactionId, @RequestBody TransactionEntity updatedTransaction) {
         return transactionService.getTransactionById(transactionId)
                 .map(existingTransaction -> {
                     existingTransaction.setOrder(updatedTransaction.getOrder());

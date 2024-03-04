@@ -1,6 +1,6 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.ServiceOfPackageDTO;
+import com.swp391.webapp.Entity.ServiceOfPackageEntity;
 import com.swp391.webapp.Service.ServiceOfPackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +18,26 @@ public class ServiceOfPackageController {
     private ServiceOfPackageService serviceOfPackageService;
 
     @GetMapping
-    public ResponseEntity<List<ServiceOfPackageDTO>> getAllServiceOfPackages() {
-        List<ServiceOfPackageDTO> serviceOfPackages = serviceOfPackageService.getAllServiceOfPackages();
+    public ResponseEntity<List<ServiceOfPackageEntity>> getAllServiceOfPackages() {
+        List<ServiceOfPackageEntity> serviceOfPackages = serviceOfPackageService.getAllServiceOfPackages();
         return ResponseEntity.ok(serviceOfPackages);
     }
 
+//    @GetMapping("/service/{serviceId}")
+//    public ResponseEntity<List<ServiceOfPackageDTO>> getAllServiceOfPackagesByServiceID(@PathVariable int serviceId) {
+//        List<ServiceOfPackageDTO> serviceOfPackages = serviceOfPackageService.getAllServiceOfPackagesByServiceId(serviceId);
+//        return ResponseEntity.ok(serviceOfPackages);
+//    }
+
     @GetMapping("/{serviceOfPackageId}")
-    public ResponseEntity<Optional<ServiceOfPackageDTO>> getServiceOfPackageById(@PathVariable int serviceOfPackageId) {
-        Optional<ServiceOfPackageDTO> serviceOfPackage = serviceOfPackageService.getServiceOfPackageById(serviceOfPackageId);
+    public ResponseEntity<Optional<ServiceOfPackageEntity>> getServiceOfPackageById(@PathVariable int serviceOfPackageId) {
+        Optional<ServiceOfPackageEntity> serviceOfPackage = serviceOfPackageService.getServiceOfPackageById(serviceOfPackageId);
         return ResponseEntity.ok(serviceOfPackage);
     }
 
     @PostMapping
-    public ResponseEntity<ServiceOfPackageDTO> saveServiceOfPackage(@RequestBody ServiceOfPackageDTO serviceOfPackage) {
-        ServiceOfPackageDTO savedServiceOfPackage = serviceOfPackageService.saveServiceOfPackage(serviceOfPackage);
+    public ResponseEntity<ServiceOfPackageEntity> saveServiceOfPackage(@RequestBody ServiceOfPackageEntity serviceOfPackage) {
+        ServiceOfPackageEntity savedServiceOfPackage = serviceOfPackageService.saveServiceOfPackage(serviceOfPackage);
         return ResponseEntity.ok(savedServiceOfPackage);
     }
 

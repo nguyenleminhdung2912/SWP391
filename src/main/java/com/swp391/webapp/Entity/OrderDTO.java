@@ -22,11 +22,11 @@ public class OrderDTO {
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
-    private AccountDTO account;
+    private AccountEntity account;
 
     @ManyToOne
     @JoinColumn(name = "package_ID", nullable = false)
-    private PackageDTO packageDTO;
+    private PackageEntity packageEntity;
 
     @ManyToOne
     @JoinColumn(name = "schedule_ID", nullable = false)

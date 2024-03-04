@@ -13,7 +13,7 @@ import java.util.Collection;
 @Setter
 @Entity
 @Table(name = "account")
-public class AccountDTO implements UserDetails {
+public class AccountEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_ID")
@@ -55,7 +55,7 @@ public class AccountDTO implements UserDetails {
     @Transient
     @Override
     public String getUsername() {
-        return this.email;
+        return this.name;
     }
 
     @Transient

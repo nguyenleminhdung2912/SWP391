@@ -1,8 +1,10 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.PackageDTO;
-import com.swp391.webapp.Entity.ServiceDTO;
+import com.swp391.webapp.Entity.AccountEntity;
+import com.swp391.webapp.Entity.PackageEntity;
 import com.swp391.webapp.Service.PackageService;
+import com.swp391.webapp.dto.Package;
+import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,22 +21,30 @@ public class PackageController {
 
     @Autowired
     private PackageService packageService;
+    @Autowired
+    private AccountUtils accountUtils;
 
-    @GetMapping
-    public ResponseEntity<List<PackageDTO>> getAllPackages() {
-        List<PackageDTO> packages = packageService.getAllPackages();
+    @GetMapping("/allPackages")
+    public ResponseEntity<List<PackageEntity>> getAllPackages() {
+        List<PackageEntity> packages = packageService.getAllPackages();
+        return ResponseEntity.ok(packages);
+    }
+
+    @GetMapping("/hostPackages")
+    public ResponseEntity<List<PackageEntity>> getAllHostPackages() {
+        List<PackageEntity> packages = packageService.getAllPackagesByPartyHost();
         return ResponseEntity.ok(packages);
     }
 
     @GetMapping("/{packageId}")
-    public ResponseEntity<Optional<PackageDTO>> getPackageById(@PathVariable int packageId) {
-        Optional<PackageDTO> aPackage = packageService.getPackageById(packageId);
+    public ResponseEntity<Optional<PackageEntity>> getPackageById(@PathVariable int packageId) {
+        Optional<PackageEntity> aPackage = packageService.getPackageById(packageId);
         return ResponseEntity.ok(aPackage);
     }
 
     @PostMapping
-    public ResponseEntity<PackageDTO> savePackage(@RequestBody PackageDTO aPackage) {
-        PackageDTO savedPackage = packageService.savePackage(aPackage);
+    public ResponseEntity<PackageEntity> savePackage(@RequestBody Package aPackage) {
+        PackageEntity savedPackage = packageService.savePackage(aPackage);
         return ResponseEntity.ok(savedPackage);
     }
 
@@ -45,8 +55,14 @@ public class PackageController {
     }
 
     @PatchMapping("/{id}")
-    public PackageDTO updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
+    public PackageEntity updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {
         return packageService.updateEachFieldById(id, fields);
+    }
+
+    @PutMapping("{packageId}")
+    public ResponseEntity<PackageEntity> updatePackage(@PathVariable int packageId, @RequestBody Package aPackage) {
+        PackageEntity updatePackage = packageService.updatePackage(packageId, aPackage);
+        return ResponseEntity.ok(updatePackage);
     }
 
 //    // Additional endpoints

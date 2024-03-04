@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 
 @Table(name = "package")
-public class PackageDTO {
+public class PackageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "package_ID")
@@ -23,7 +23,7 @@ public class PackageDTO {
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
-    private AccountDTO account;
+    private AccountEntity account;
 
     @Column(nullable = false)
     private String name;
@@ -36,6 +36,16 @@ public class PackageDTO {
 
     @Column
     private String picture;
+    @Column
+    private boolean isDeleted = false;
+
+    public PackageEntity(AccountEntity account, String name, BigDecimal price, String description, String picture) {
+        this.account = account;
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.picture = picture;
+    }
 
     // Constructors, getters, setters, etc.
 
