@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Entity
 @NoArgsConstructor
@@ -20,10 +21,12 @@ public class ServiceOfPackageEntity {
 
     @ManyToOne
     @JoinColumn(name = "package_ID", nullable = false)
+    @JsonIgnore
     private PackageEntity packageEntity;
 
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)
+    @JsonIgnore
     private ServiceEntity service;
 
 

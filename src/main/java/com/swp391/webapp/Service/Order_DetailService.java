@@ -13,7 +13,7 @@ public class Order_DetailService {
     @Autowired
     private Order_Detail_Repository service_DetailRepository;
 
-    // Service methods for Service_Detail entity
+    // ServiceDTO methods for Service_Detail entity
 
     public List<Order_Detail_DTO> getAllServiceDetails() {
         return service_DetailRepository.findAll();

@@ -1,5 +1,6 @@
 package com.swp391.webapp.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -23,6 +25,7 @@ public class PackageEntity {
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
+    @JsonIgnore
     private AccountEntity account;
 
     @Column(nullable = false)
@@ -47,6 +50,9 @@ public class PackageEntity {
         this.picture = picture;
     }
 
+    @OneToMany(mappedBy = "packageEntity", cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<ServiceOfPackageEntity> serviceOfPackageEntities;
     // Constructors, getters, setters, etc.
 
     // Constructors, getters, setters, etc.

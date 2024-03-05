@@ -1,9 +1,13 @@
 package com.swp391.webapp.Service;
 
+import com.swp391.webapp.Entity.PackageEntity;
 import com.swp391.webapp.Entity.ServiceEntity;
+import com.swp391.webapp.Entity.ServiceOfPackageEntity;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Repository.ServiceOfPackageRepository;
 import com.swp391.webapp.Repository.ServiceRepository;
+import com.swp391.webapp.dto.ServiceDTO;
+import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -20,10 +24,17 @@ public class ServiceService {
     @Autowired
     private ServiceOfPackageRepository serviceOfPackageRepository;
 
-    // Service methods for Service entity
+    @Autowired
+    AccountUtils accountUtils;
+
+    // ServiceDTO methods for ServiceDTO entity
 
     public List<ServiceEntity> getAllServices() {
         return serviceRepository.findAll();
+    }
+
+    public List<ServiceEntity> getAllServicesByHost(long id) {
+        return serviceRepository.findServicesByAccountAccountID(id);
     }
     public List<ServiceEntity> getServicesByHostID(int id) {
         List<ServiceEntity> list = serviceRepository.findAll();
@@ -43,8 +54,19 @@ public class ServiceService {
         return serviceRepository.findById(packageId).orElse(null);
     }
 
-    public ServiceEntity saveService(ServiceEntity service) {
-        return serviceRepository.save(service);
+    public ServiceOfPackageEntity saveService(ServiceDTO service, long packageId) {
+        PackageEntity packageEntity = packageRepository.findPackageByPackageID(packageId);
+        ServiceOfPackageEntity serviceOfPackage = new ServiceOfPackageEntity();
+        ServiceEntity serviceEntity = new ServiceEntity();
+        serviceEntity.setAccount(accountUtils.getCurrentAccount());
+        serviceEntity.setPrice(service.getPrice());
+        serviceEntity.setName(service.getName());
+        serviceEntity.setPicture(service.getPicture());
+        serviceEntity.setDescription(service.getDescription());
+        serviceOfPackage.setService(serviceEntity);
+        serviceOfPackage.setPackageEntity(packageEntity);
+        serviceEntity = serviceRepository.save(serviceEntity);
+        return serviceOfPackageRepository.save(serviceOfPackage);
     }
 
     public void deleteService(int serviceId) {

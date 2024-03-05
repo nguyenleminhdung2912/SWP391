@@ -3,6 +3,7 @@ package com.swp391.webapp.Controller;
 import com.swp391.webapp.Config.SecuredRestController;
 import com.swp391.webapp.Entity.ServiceEntity;
 import com.swp391.webapp.Service.ServiceService;
+import com.swp391.webapp.dto.ServiceDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,17 +29,19 @@ public class ServiceController implements SecuredRestController {
         return ResponseEntity.ok(services);
     }
 
-    @GetMapping("/{serviceId}")
-    public ResponseEntity<ServiceEntity> getServiceById(@PathVariable int serviceId) {
-        ServiceEntity service = serviceService.getServiceById(serviceId);
-        return ResponseEntity.ok(service);
+    @GetMapping("{hostId}")
+    public ResponseEntity<List<ServiceEntity>> getAllServicesByPartyHost(@PathVariable long hostId) {
+        List<ServiceEntity> services = serviceService.getAllServicesByHost(hostId);
+        return ResponseEntity.ok(services);
     }
 
-    @PostMapping
-    public ResponseEntity<ServiceEntity> saveService(@RequestBody ServiceEntity service) {
-        ServiceEntity savedService = serviceService.saveService(service);
-        return ResponseEntity.ok(savedService);
-    }
+//    @GetMapping("/{serviceId}")
+//    public ResponseEntity<ServiceEntity> getServiceById(@PathVariable int serviceId) {
+//        ServiceEntity service = serviceService.getServiceById(serviceId);
+//        return ResponseEntity.ok(service);
+//    }
+
+
 
     @DeleteMapping("/{serviceId}")
     public ResponseEntity<Void> deleteService(@PathVariable int serviceId) {

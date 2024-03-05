@@ -17,7 +17,7 @@ public class ServiceOfPackageService {
     @Autowired
     private ServiceRepository serviceRepository;
 
-    // Service methods for ServiceOfPackage entity
+    // ServiceDTO methods for ServiceOfPackage entity
 
     public List<ServiceOfPackageEntity> getAllServiceOfPackages() {
         return serviceOfPackageRepository.findAll();

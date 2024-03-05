@@ -13,7 +13,7 @@ public class FeedbackService {
     @Autowired
     private FeedbackRepository feedbackRepository;
 
-    // Service methods for Feedback entity
+    // ServiceDTO methods for Feedback entity
 
     public List<FeedbackEntity> getAllFeedbacks() {
         return feedbackRepository.findAll();

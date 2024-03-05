@@ -13,7 +13,7 @@ public class OrderService {
     @Autowired
     private OrderRepository OrderRepository;
 
-    // Service methods for Order entity
+    // ServiceDTO methods for Order entity
 
     public List<OrderDTO> getAllOrders() {
         return OrderRepository.findAll();

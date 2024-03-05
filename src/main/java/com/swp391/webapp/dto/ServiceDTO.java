@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Service {
+public class ServiceDTO {
     String name;
     BigDecimal price;
     String description;

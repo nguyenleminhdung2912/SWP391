@@ -5,6 +5,7 @@ import com.swp391.webapp.Entity.PackageEntity;
 import com.swp391.webapp.Service.PackageService;
 import com.swp391.webapp.dto.Package;
 import com.swp391.webapp.utils.AccountUtils;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/api/packages")
+@SecurityRequirement(name = "api")
 public class PackageController {
 
     @Autowired
@@ -33,6 +35,12 @@ public class PackageController {
     @GetMapping("/hostPackages")
     public ResponseEntity<List<PackageEntity>> getAllHostPackages() {
         List<PackageEntity> packages = packageService.getAllPackagesByPartyHost();
+        return ResponseEntity.ok(packages);
+    }
+
+    @GetMapping("/packages-of-host/{hostId}")
+    public ResponseEntity<List<PackageEntity>> getAllHostPackagesByHost(@PathVariable long hostId) {
+        List<PackageEntity> packages = packageService.getAllPackagesByPartyHost(hostId);
         return ResponseEntity.ok(packages);
     }
 

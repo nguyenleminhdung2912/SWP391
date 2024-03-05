@@ -14,7 +14,7 @@ public class ScheduleService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    // Service methods for Schedule entity
+    // ServiceDTO methods for Schedule entity
 
     public List<ScheduleDTO> getAllSchedules() {
         return scheduleRepository.findAll();

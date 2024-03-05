@@ -1,5 +1,6 @@
 package com.swp391.webapp.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @NoArgsConstructor
@@ -39,7 +41,11 @@ public class ServiceEntity {
 
     @Column
     private boolean isDeleted = false;
-
     // Constructors, getters, setters, etc.
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<ServiceOfPackageEntity> serviceOfPackageEntities;
+
 }
 

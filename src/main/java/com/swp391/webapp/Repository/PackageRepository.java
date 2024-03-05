@@ -13,5 +13,7 @@ public interface PackageRepository extends JpaRepository<PackageEntity, Integer>
     // Additional custom queries if needed
 
     List<PackageEntity> findPackagesByAccount(AccountEntity account);
+
+    PackageEntity findPackageByPackageID(long id);
 }
 

@@ -2,6 +2,7 @@ package com.swp391.webapp.Service;
 
 import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Entity.PackageEntity;
+import com.swp391.webapp.Repository.AccountRepository;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.dto.Package;
 import com.swp391.webapp.utils.AccountUtils;
@@ -22,9 +23,12 @@ public class PackageService {
     private PackageRepository packageRepository;
 
     @Autowired
+    AccountRepository accountRepository;
+
+    @Autowired
     AccountUtils accountUtils;
 
-    // Service methods for Package entity
+    // ServiceDTO methods for Package entity
 
     public List<PackageEntity> getAllPackages() {
         return packageRepository.findAll();
@@ -32,6 +36,11 @@ public class PackageService {
 
     public List<PackageEntity> getAllPackagesByPartyHost() {
         return packageRepository.findPackagesByAccount(accountUtils.getCurrentAccount());
+    }
+
+    public List<PackageEntity> getAllPackagesByPartyHost(long id) {
+        AccountEntity account = accountRepository.findAccountByAccountID(id);
+        return packageRepository.findPackagesByAccount(account);
     }
 
     public Optional<PackageEntity> getPackageById(int packageId) {
