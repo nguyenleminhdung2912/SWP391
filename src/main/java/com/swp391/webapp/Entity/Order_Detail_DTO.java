@@ -20,7 +20,7 @@ public class Order_Detail_DTO {
 
     @ManyToOne
     @JoinColumn(name = "order_ID", nullable = false)
-    private OrderDTO order;
+    private OrderEntity order;
 
     @ManyToOne
     @JoinColumn(name = "service_ID", nullable = false)

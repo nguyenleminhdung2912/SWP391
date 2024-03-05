@@ -15,6 +15,7 @@ import org.springframework.util.ReflectionUtils;
 import java.lang.reflect.Field;
 import java.util.*;
 
+
 @Service
 public class ServiceService {
     @Autowired
@@ -33,7 +34,7 @@ public class ServiceService {
         return serviceRepository.findAll();
     }
 
-    public List<ServiceEntity> getAllServicesByHost(long id) {
+    public List<ServiceEntity> getAllServicesByHost(int id) {
         return serviceRepository.findServicesByAccountAccountID(id);
     }
     public List<ServiceEntity> getServicesByHostID(int id) {
@@ -47,31 +48,46 @@ public class ServiceService {
         return listTemp;
     }
 
-    public ServiceEntity getServiceById(int serviceId) {
-        return serviceRepository.findById(serviceId).orElse(null);
+    public Optional<ServiceEntity> getServiceById(int serviceId) {
+        return serviceRepository.findById(serviceId);
     }
     public ServiceEntity getServiceByPackageId(int packageId) {
         return serviceRepository.findById(packageId).orElse(null);
     }
 
-    public ServiceOfPackageEntity saveService(ServiceDTO service, long packageId) {
+    public ServiceOfPackageEntity saveService(ServiceDTO serviceDTO, int packageId) {
         PackageEntity packageEntity = packageRepository.findPackageByPackageID(packageId);
         ServiceOfPackageEntity serviceOfPackage = new ServiceOfPackageEntity();
         ServiceEntity serviceEntity = new ServiceEntity();
         serviceEntity.setAccount(accountUtils.getCurrentAccount());
-        serviceEntity.setPrice(service.getPrice());
-        serviceEntity.setName(service.getName());
-        serviceEntity.setPicture(service.getPicture());
-        serviceEntity.setDescription(service.getDescription());
+        serviceEntity.setPrice(serviceDTO.getPrice());
+        serviceEntity.setName(serviceDTO.getName());
+        serviceEntity.setPicture(serviceDTO.getPicture());
+        serviceEntity.setDescription(serviceDTO.getDescription());
         serviceOfPackage.setService(serviceEntity);
         serviceOfPackage.setPackageEntity(packageEntity);
         serviceEntity = serviceRepository.save(serviceEntity);
         return serviceOfPackageRepository.save(serviceOfPackage);
     }
 
-    public void deleteService(int serviceId) {
-        serviceOfPackageRepository.deleteById(serviceId);
-        serviceRepository.deleteById(serviceId);
+    public ServiceOfPackageEntity addExistServicetoPackage(int serviceId, int packageId) {
+        PackageEntity packageEntity = packageRepository.findPackageByPackageID(packageId);
+
+        ServiceOfPackageEntity serviceOfPackage = new ServiceOfPackageEntity();
+
+        ServiceEntity serviceEntity = serviceRepository.findById(serviceId).get();
+
+        serviceOfPackage.setService(serviceEntity);
+        serviceOfPackage.setPackageEntity(packageEntity);
+
+        serviceEntity = serviceRepository.save(serviceEntity);
+        return serviceOfPackageRepository.save(serviceOfPackage);
+    }
+
+    public ServiceEntity deleteService(int serviceId) {
+        ServiceEntity s = serviceRepository.findById(serviceId).get();
+        s.setDeleted(true);
+        return serviceRepository.save(s);
     }
 
     public ServiceEntity updateEachFieldById(int id, Map<String, Objects> fields) {

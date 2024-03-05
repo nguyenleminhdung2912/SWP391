@@ -2,6 +2,7 @@ package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Config.SecuredRestController;
 import com.swp391.webapp.Entity.ServiceEntity;
+import com.swp391.webapp.Entity.ServiceOfPackageEntity;
 import com.swp391.webapp.Service.ServiceService;
 import com.swp391.webapp.dto.ServiceDTO;
 import com.swp391.webapp.utils.AccountUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -29,19 +31,27 @@ public class ServiceController implements SecuredRestController {
         return ResponseEntity.ok(services);
     }
 
-    @GetMapping("{hostId}")
-    public ResponseEntity<List<ServiceEntity>> getAllServicesByPartyHost(@PathVariable long hostId) {
+    @GetMapping("{serviceId}")
+    public ResponseEntity<Optional<ServiceEntity>> getServicesById(@PathVariable int serviceId) {
+        Optional<ServiceEntity> services = serviceService.getServiceById(serviceId);
+        return ResponseEntity.ok(services);
+    }
+
+    @GetMapping("/host/{hostId}")
+    public ResponseEntity<List<ServiceEntity>> getAllServicesByPartyHost(@PathVariable int hostId) {
         List<ServiceEntity> services = serviceService.getAllServicesByHost(hostId);
         return ResponseEntity.ok(services);
     }
 
-//    @GetMapping("/{serviceId}")
-//    public ResponseEntity<ServiceEntity> getServiceById(@PathVariable int serviceId) {
-//        ServiceEntity service = serviceService.getServiceById(serviceId);
-//        return ResponseEntity.ok(service);
-//    }
+    @PostMapping("/addService/{packageId}")
+    public ServiceOfPackageEntity getAllServicesByPartyHost(@RequestBody ServiceDTO serviceDTO, @PathVariable int packageId) {
+        return serviceService.saveService(serviceDTO, packageId);
+    }
 
-
+    @PostMapping("/{serviceId}/{packageId}")
+    public ServiceOfPackageEntity getAllServicesByPartyHost(@PathVariable int serviceId, @PathVariable int packageId) {
+        return serviceService.addExistServicetoPackage(serviceId, packageId);
+    }
 
     @DeleteMapping("/{serviceId}")
     public ResponseEntity<Void> deleteService(@PathVariable int serviceId) {
@@ -49,10 +59,10 @@ public class ServiceController implements SecuredRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/host/{hostID}")
-    public ResponseEntity<List<ServiceEntity>> getServicesByHostID(@PathVariable int hostID) {
-        return ResponseEntity.ok(serviceService.getServicesByHostID(hostID));
-    }
+//    @GetMapping("/host/{hostID}")
+//    public ResponseEntity<List<ServiceEntity>> getServicesByHostID(@PathVariable int hostID) {
+//        return ResponseEntity.ok(serviceService.getServicesByHostID(hostID));
+//    }
 
     @PatchMapping("/{id}")
     public ServiceEntity updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {

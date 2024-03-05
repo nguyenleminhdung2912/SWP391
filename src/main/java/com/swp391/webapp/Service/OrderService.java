@@ -1,6 +1,6 @@
 package com.swp391.webapp.Service;
 
-import com.swp391.webapp.Entity.OrderDTO;
+import com.swp391.webapp.Entity.OrderEntity;
 import com.swp391.webapp.Repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,15 @@ public class OrderService {
 
     // ServiceDTO methods for Order entity
 
-    public List<OrderDTO> getAllOrders() {
+    public List<OrderEntity> getAllOrders() {
         return OrderRepository.findAll();
     }
 
-    public OrderDTO getOrderById(int OrderId) {
+    public OrderEntity getOrderById(int OrderId) {
         return OrderRepository.findById(OrderId).orElse(null);
     }
 
-    public OrderDTO saveOrder(OrderDTO Order) {
+    public OrderEntity saveOrder(OrderEntity Order) {
         return OrderRepository.save(Order);
     }
 

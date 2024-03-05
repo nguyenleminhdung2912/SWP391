@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class PackageService {
@@ -35,10 +32,17 @@ public class PackageService {
     }
 
     public List<PackageEntity> getAllPackagesByPartyHost() {
-        return packageRepository.findPackagesByAccount(accountUtils.getCurrentAccount());
+        List<PackageEntity> tempList = packageRepository.findPackagesByAccountAndIsDeletedFalse(accountUtils.getCurrentAccount());
+
+//        for (int i = 0; i < tempList.size(); i++) {
+//            if (tempList.get(i).isDeleted() == true) {
+//                tempList.remove(tempList.get(i));
+//            }
+//        }
+        return tempList;
     }
 
-    public List<PackageEntity> getAllPackagesByPartyHost(long id) {
+    public List<PackageEntity> getAllPackagesByPartyHost(int id) {
         AccountEntity account = accountRepository.findAccountByAccountID(id);
         return packageRepository.findPackagesByAccount(account);
     }
@@ -53,7 +57,10 @@ public class PackageService {
     }
 
     public void deletePackage(int packageId) {
-        packageRepository.deleteById(packageId);
+        PackageEntity p = packageRepository.findById(packageId).get();
+        p.setDeleted(true);
+        packageRepository.save(p);
+
     }
 
     public PackageEntity updateEachFieldById(int id, Map<String, Objects> fields) {

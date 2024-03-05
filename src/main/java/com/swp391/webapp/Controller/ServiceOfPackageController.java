@@ -1,6 +1,5 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.ServiceEntity;
 import com.swp391.webapp.Entity.ServiceOfPackageEntity;
 import com.swp391.webapp.Service.ServiceOfPackageService;
 import com.swp391.webapp.Service.ServiceService;
@@ -26,7 +25,7 @@ public class ServiceOfPackageController {
     ServiceService serviceService;
 
     @PostMapping("{packageId}")
-    public ResponseEntity<ServiceOfPackageEntity> saveService(@RequestBody ServiceDTO serviceDTO, @PathVariable Long packageId) {
+    public ResponseEntity<ServiceOfPackageEntity> saveService(@RequestBody ServiceDTO serviceDTO, @PathVariable int packageId) {
         ServiceOfPackageEntity savedService = serviceService.saveService(serviceDTO, packageId);
         return ResponseEntity.ok(savedService);
     }

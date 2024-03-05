@@ -1,6 +1,6 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.OrderDTO;
+import com.swp391.webapp.Entity.OrderEntity;
 import com.swp391.webapp.Service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +17,20 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<List<OrderDTO>> getAllOrders() {
-        List<OrderDTO> Orders = orderService.getAllOrders();
+    public ResponseEntity<List<OrderEntity>> getAllOrders() {
+        List<OrderEntity> Orders = orderService.getAllOrders();
         return ResponseEntity.ok(Orders);
     }
 
     @GetMapping("/{OrderId}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable int OrderId) {
-        OrderDTO Order = orderService.getOrderById(OrderId);
+    public ResponseEntity<OrderEntity> getOrderById(@PathVariable int OrderId) {
+        OrderEntity Order = orderService.getOrderById(OrderId);
         return ResponseEntity.ok(Order);
     }
 
     @PostMapping
-    public ResponseEntity<OrderDTO> saveOrder(@RequestBody OrderDTO Order) {
-        OrderDTO savedOrder = orderService.saveOrder(Order);
+    public ResponseEntity<OrderEntity> saveOrder(@RequestBody OrderEntity Order) {
+        OrderEntity savedOrder = orderService.saveOrder(Order);
         return ResponseEntity.ok(savedOrder);
     }
 

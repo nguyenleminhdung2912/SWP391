@@ -43,6 +43,9 @@ public class AccountEntity implements UserDetails {
     @Column(nullable = false)
     private String status;
 
+    @Column(nullable = false)
+    private int isDeleted = 0;
+
     @Transient
     private String tokens;
 

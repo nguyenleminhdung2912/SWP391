@@ -15,5 +15,7 @@ public interface PackageRepository extends JpaRepository<PackageEntity, Integer>
     List<PackageEntity> findPackagesByAccount(AccountEntity account);
 
     PackageEntity findPackageByPackageID(long id);
+
+    List<PackageEntity> findPackagesByAccountAndIsDeletedFalse(AccountEntity account);
 }
 

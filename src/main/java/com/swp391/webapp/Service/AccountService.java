@@ -66,7 +66,9 @@ public class AccountService implements UserDetailsService {
     }
 
     public void deleteAccount(int accountId) {
-        accountRepository.deleteById(accountId);
+        AccountEntity a = accountRepository.findById(accountId).get();
+        a.setIsDeleted(1);
+        accountRepository.save(a);
     }
 
     public AccountEntity updateEachFieldById(int id, Map<String, Objects> fields) {

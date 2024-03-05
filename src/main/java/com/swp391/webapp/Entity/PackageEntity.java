@@ -2,10 +2,7 @@ package com.swp391.webapp.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,8 +10,7 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 
 @Table(name = "package")
 public class PackageEntity {
@@ -25,7 +21,6 @@ public class PackageEntity {
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
-    @JsonIgnore
     private AccountEntity account;
 
     @Column(nullable = false)
@@ -39,6 +34,7 @@ public class PackageEntity {
 
     @Column
     private String picture;
+
     @Column
     private boolean isDeleted = false;
 

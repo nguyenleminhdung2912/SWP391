@@ -22,7 +22,7 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "order_ID", nullable = false)
-    private OrderDTO order;
+    private OrderEntity order;
 
     @ManyToOne
     @JoinColumn(name = "wallet_ID", nullable = false)

@@ -39,7 +39,7 @@ public class PackageController {
     }
 
     @GetMapping("/packages-of-host/{hostId}")
-    public ResponseEntity<List<PackageEntity>> getAllHostPackagesByHost(@PathVariable long hostId) {
+    public ResponseEntity<List<PackageEntity>> getAllHostPackagesByHost(@PathVariable int hostId) {
         List<PackageEntity> packages = packageService.getAllPackagesByPartyHost(hostId);
         return ResponseEntity.ok(packages);
     }
@@ -50,7 +50,7 @@ public class PackageController {
         return ResponseEntity.ok(aPackage);
     }
 
-    @PostMapping
+    @PostMapping("/addPackage")
     public ResponseEntity<PackageEntity> savePackage(@RequestBody Package aPackage) {
         PackageEntity savedPackage = packageService.savePackage(aPackage);
         return ResponseEntity.ok(savedPackage);
