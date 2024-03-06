@@ -30,10 +30,9 @@ public class ServiceController implements SecuredRestController {
         List<ServiceEntity> services = serviceService.getAllServices();
         return ResponseEntity.ok(services);
     }
-
-    @GetMapping("{serviceId}")
-    public ResponseEntity<Optional<ServiceEntity>> getServicesById(@PathVariable int serviceId) {
-        Optional<ServiceEntity> services = serviceService.getServiceById(serviceId);
+    @GetMapping("{packageId}")
+    public ResponseEntity<List<ServiceEntity>> getServicesById(@PathVariable int packageId) {
+        List<ServiceEntity> services = serviceService.getServiceByPackageId(packageId);
         return ResponseEntity.ok(services);
     }
 

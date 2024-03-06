@@ -51,8 +51,8 @@ public class ServiceService {
     public Optional<ServiceEntity> getServiceById(int serviceId) {
         return serviceRepository.findById(serviceId);
     }
-    public ServiceEntity getServiceByPackageId(int packageId) {
-        return serviceRepository.findById(packageId).orElse(null);
+    public List<ServiceEntity> getServiceByPackageId(int packageId) {
+        return serviceRepository.findServicesByPackageId(packageId);
     }
 
     public ServiceOfPackageEntity saveService(ServiceDTO serviceDTO, int packageId) {
