@@ -1,7 +1,9 @@
 package com.swp391.webapp.Service;
 
 import com.swp391.webapp.Entity.FeedbackEntity;
+import com.swp391.webapp.Entity.ServiceEntity;
 import com.swp391.webapp.Repository.FeedbackRepository;
+import com.swp391.webapp.Repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,8 @@ public class FeedbackService {
 
     @Autowired
     private FeedbackRepository feedbackRepository;
+    @Autowired
+    private ServiceRepository serviceRepository;
 
     // ServiceDTO methods for Feedback entity
 
@@ -29,6 +33,11 @@ public class FeedbackService {
 
     public void deleteFeedback(int feedbackId) {
         feedbackRepository.deleteById(feedbackId);
+    }
+
+    public List<FeedbackEntity> getFeedbacksByService(int serviceId) {
+        ServiceEntity serviceEntity = serviceRepository.findById(serviceId).get();
+        return feedbackRepository.findFeedbacksByService(serviceEntity);
     }
 
 

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "order_detail")
-public class Order_Detail_DTO {
+public class Order_Detail_Entity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_detail_ID")

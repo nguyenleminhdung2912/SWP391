@@ -2,6 +2,7 @@ package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Service.AccountService;
+import com.swp391.webapp.dto.AccountUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,12 @@ public class AccountController {
     public ResponseEntity<Void> deleteAccount(@PathVariable int accountId) {
         accountService.deleteAccount(accountId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public Optional<AccountEntity> updateAccountById(@PathVariable int id, @RequestBody AccountUpdate account) {
+        accountService.updateAccountByID(id, account);
+        return accountService.getAccountById(id);
     }
 
 }

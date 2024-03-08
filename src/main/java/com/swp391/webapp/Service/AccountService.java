@@ -2,6 +2,7 @@ package com.swp391.webapp.Service;
 
 import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Repository.AccountRepository;
+import com.swp391.webapp.dto.AccountUpdate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,8 +26,6 @@ public class AccountService implements UserDetailsService {
     @Override
     public AccountEntity loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<AccountEntity> account = accountRepository.findByEmail(email);
-//        AccountDetails accountDetails =  account.map(AccountDetails::new).
-//                orElseThrow(() -> new UsernameNotFoundException("User not found" + email));
         return account.get();
     }
 
@@ -36,11 +35,11 @@ public class AccountService implements UserDetailsService {
     }
 
     public List<AccountEntity> getAllAcounts() {
-        return accountRepository.findAll();
+        return accountRepository.findAccountsByIsDeleted(0);
     }
 
     public List<AccountEntity> getAllHost() {
-        List<AccountEntity> list = accountRepository.findAll();
+        List<AccountEntity> list = accountRepository.findAccountsByIsDeleted(0);
         List<AccountEntity> listTemp = new ArrayList<AccountEntity>();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getRole().equals("Host")) {
@@ -51,7 +50,7 @@ public class AccountService implements UserDetailsService {
     }
 
     public List<AccountEntity> getAllGuest() {
-        List<AccountEntity> list = accountRepository.findAll();
+        List<AccountEntity> list = accountRepository.findAccountsByIsDeleted(0);
         List<AccountEntity> listTemp = new ArrayList<AccountEntity>();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getRole().equals("Guest")) {
@@ -71,6 +70,10 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(a);
     }
 
+    public void refuseAccount(int accountId) {
+        accountRepository.deleteById(accountId);
+    }
+
     public AccountEntity updateEachFieldById(int id, Map<String, Objects> fields) {
         Optional<AccountEntity> existingUser = accountRepository.findById(id);
         if (existingUser.isPresent()) {
@@ -84,16 +87,23 @@ public class AccountService implements UserDetailsService {
         return null;
     }
 
-    public AccountEntity updateAccountByID(int id, AccountEntity accountUpdate) {
+    public AccountEntity updateAccountByID(int id, AccountUpdate accountUpdate) {
         AccountEntity existing = accountRepository.findById(id).get();
-        existing.setEmail(accountUpdate.getEmail());
-        existing.setPassword(accountUpdate.getPassword());
-        existing.setName(accountUpdate.getName());
-        existing.setPhone(accountUpdate.getPhone());
-        existing.setGender(accountUpdate.getGender());
-        existing.setRole(accountUpdate.getRole());
-        existing.setAvatar(accountUpdate.getAvatar());
-        existing.setStatus(accountUpdate.getStatus());
+        if (!(accountUpdate.getEmail() == null)) {
+            existing.setEmail(accountUpdate.getEmail());
+        }
+        if (!(accountUpdate.getName() == null)) {
+            existing.setName(accountUpdate.getName());
+        }
+        if (!(accountUpdate.getPhone() == null)) {
+            existing.setPhone(accountUpdate.getPhone());
+        }
+        if (!(accountUpdate.getGender() == null)) {
+            existing.setGender(accountUpdate.getGender());
+        }
+        if (!(accountUpdate.getAvatar() == null)) {
+            existing.setAvatar(accountUpdate.getAvatar());
+        }
         return accountRepository.save(existing);
     }
 }

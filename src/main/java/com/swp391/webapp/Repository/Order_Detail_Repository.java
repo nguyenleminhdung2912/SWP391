@@ -1,11 +1,11 @@
 package com.swp391.webapp.Repository;
 
-import com.swp391.webapp.Entity.Order_Detail_DTO;
+import com.swp391.webapp.Entity.Order_Detail_Entity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface Order_Detail_Repository extends JpaRepository<Order_Detail_DTO, Integer> {
+public interface Order_Detail_Repository extends JpaRepository<Order_Detail_Entity, Integer> {
     // Additional custom queries if needed
 }
 

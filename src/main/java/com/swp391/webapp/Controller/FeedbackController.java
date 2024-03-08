@@ -10,33 +10,39 @@ import java.util.List;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/Feedbacks")
+@RequestMapping("/api/feedbacks")
 public class FeedbackController {
 
     @Autowired
-    private FeedbackService FeedbackDTOService;
+    private FeedbackService feedbackService;
 
     @GetMapping
-    public ResponseEntity<List<FeedbackEntity>> getAllFeedbackDTOs() {
-        List<FeedbackEntity> feedbackEntities = FeedbackDTOService.getAllFeedbacks();
+    public ResponseEntity<List<FeedbackEntity>> getAllFeedbacks() {
+        List<FeedbackEntity> feedbackEntities = feedbackService.getAllFeedbacks();
         return ResponseEntity.ok(feedbackEntities);
     }
 
-    @GetMapping("/{FeedbackDTOId}")
-    public ResponseEntity<FeedbackEntity> getFeedbackDTOById(@PathVariable int FeedbackId) {
-        FeedbackEntity FeedbackEntity = FeedbackDTOService.getFeedbackById(FeedbackId);
+    @GetMapping("/service/{serviceId}")
+    public ResponseEntity<List<FeedbackEntity>> getFeedbacksByService(@PathVariable int serviceId) {
+        List<FeedbackEntity> feedbackEntities = feedbackService.getFeedbacksByService(serviceId);
+        return ResponseEntity.ok(feedbackEntities);
+    }
+
+    @GetMapping("/{FeedbackId}")
+    public ResponseEntity<FeedbackEntity> getFeedbackById(@PathVariable int FeedbackId) {
+        FeedbackEntity FeedbackEntity = feedbackService.getFeedbackById(FeedbackId);
         return ResponseEntity.ok(FeedbackEntity);
     }
 
     @PostMapping
-    public ResponseEntity<FeedbackEntity> saveFeedbackDTO(@RequestBody FeedbackEntity feedbackEntity) {
-        FeedbackEntity savedFeedbackEntity = FeedbackDTOService.saveFeedback(feedbackEntity);
+    public ResponseEntity<FeedbackEntity> saveFeedback(@RequestBody FeedbackEntity feedbackEntity) {
+        FeedbackEntity savedFeedbackEntity = feedbackService.saveFeedback(feedbackEntity);
         return ResponseEntity.ok(savedFeedbackEntity);
     }
 
-    @DeleteMapping("/{FeedbackDTOId}")
-    public ResponseEntity<Void> deleteFeedbackDTO(@PathVariable int FeedbackId) {
-        FeedbackDTOService.deleteFeedback(FeedbackId);
+    @DeleteMapping("/{FeedbackId}")
+    public ResponseEntity<Void> deleteFeedback(@PathVariable int FeedbackId) {
+        feedbackService.deleteFeedback(FeedbackId);
         return ResponseEntity.noContent().build();
     }
 

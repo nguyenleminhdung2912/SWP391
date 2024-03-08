@@ -1,9 +1,8 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Entity.PackageEntity;
 import com.swp391.webapp.Service.PackageService;
-import com.swp391.webapp.dto.Package;
+import com.swp391.webapp.dto.PackageDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +50,8 @@ public class PackageController {
     }
 
     @PostMapping("/addPackage")
-    public ResponseEntity<PackageEntity> savePackage(@RequestBody Package aPackage) {
-        PackageEntity savedPackage = packageService.savePackage(aPackage);
+    public ResponseEntity<PackageEntity> savePackage(@RequestBody PackageDTO aPackageDTO) {
+        PackageEntity savedPackage = packageService.savePackage(aPackageDTO);
         return ResponseEntity.ok(savedPackage);
     }
 
@@ -68,8 +67,8 @@ public class PackageController {
     }
 
     @PutMapping("{packageId}")
-    public ResponseEntity<PackageEntity> updatePackage(@PathVariable int packageId, @RequestBody Package aPackage) {
-        PackageEntity updatePackage = packageService.updatePackage(packageId, aPackage);
+    public ResponseEntity<PackageEntity> updatePackage(@PathVariable int packageId, @RequestBody PackageDTO aPackageDTO) {
+        PackageEntity updatePackage = packageService.updatePackage(packageId, aPackageDTO);
         return ResponseEntity.ok(updatePackage);
     }
 

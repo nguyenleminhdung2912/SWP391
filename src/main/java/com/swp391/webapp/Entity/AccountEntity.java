@@ -1,5 +1,6 @@
 package com.swp391.webapp.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -87,7 +88,8 @@ public class AccountEntity implements UserDetails {
     }
 
     @OneToMany(mappedBy = "account")
-    List<ScheduleDTO> schedules;
+    @JsonIgnore
+    List<Schedule> schedules;
 
     // Constructors, getters, setters, etc.
 }

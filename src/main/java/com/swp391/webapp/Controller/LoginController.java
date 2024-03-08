@@ -4,9 +4,11 @@ import com.swp391.webapp.Config.SecuredRestController;
 import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Entity.WalletDTO;
 import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
+import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Service.AccountService;
 import com.swp391.webapp.Service.JWTService;
 import com.swp391.webapp.Service.WalletService;
+import com.swp391.webapp.dto.AccountUpdate;
 import com.swp391.webapp.dto.LoginRequestDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,8 @@ public class LoginController implements SecuredRestController {
     AccountUtils accountUtils;
     @Autowired
     MailController mailController = new MailController();
-
+    @Autowired
+    private PackageRepository packageRepository;
 
 
     @GetMapping("/welcome")
@@ -112,6 +115,13 @@ public class LoginController implements SecuredRestController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/refuse/{accountId}")
+    public ResponseEntity<Void> refuseAccount(@PathVariable int accountId) {
+        walletService.deleteWalletByAccountID(accountId);
+        accountService.refuseAccount(accountId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/profile")
     public ResponseEntity getProfile(){
         return ResponseEntity.ok(accountUtils.getCurrentAccount());
@@ -131,7 +141,7 @@ public class LoginController implements SecuredRestController {
     }
 
     @PutMapping("/{id}")
-    public AccountEntity getUserById(@PathVariable int id, @RequestBody AccountEntity account) {
+    public AccountEntity getUserById(@PathVariable int id, @RequestBody AccountUpdate account) {
         return accountService.updateAccountByID(id, account);
     }
 

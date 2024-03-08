@@ -11,9 +11,11 @@ import java.util.List;
 public interface ServiceRepository extends JpaRepository<ServiceEntity, Integer> {
     // Additional custom queries if needed
 
-    List<ServiceEntity> findServicesByAccountAccountID(long id);
+    List<ServiceEntity> findServicesByAccountAccountID(int id);
 
     @Query("SELECT s FROM ServiceEntity s Join ServiceOfPackageEntity sop on s.serviceID = sop.service.id WHERE sop.packageEntity.id = ?1")
-    List<ServiceEntity> findServicesByPackageId(long packageId);
+    List<ServiceEntity> findServicesByPackageId(int packageId);
+
+
 }
 

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Optional;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,13 +32,31 @@ public class OrderEntity {
 
     @ManyToOne
     @JoinColumn(name = "schedule_ID", nullable = false)
-    private ScheduleDTO scheduleDTO;
+    private Schedule schedule;
 
     @Column(nullable = false)
     private int quantity;
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    @Column(nullable = true)
+    private Date createAt;
+
+    @Column(nullable = true)
+    private OrderStatus status;
+
+    @Column(nullable = true)
+    private String venue;
+
+    @Column(nullable = true)
+    private String phone;
+
+    @Column(nullable = true)
+    private String customerName;
+
+    @Column(nullable = true)
+    private String customerEmail;
 
     // Constructors, getters, setters, etc.
 }

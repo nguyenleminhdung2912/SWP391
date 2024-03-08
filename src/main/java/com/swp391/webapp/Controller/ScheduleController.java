@@ -1,6 +1,6 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.ScheduleDTO;
+import com.swp391.webapp.Entity.Schedule;
 import com.swp391.webapp.Service.ScheduleService;
 import com.swp391.webapp.dto.ScheduleRequestDTO;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -20,27 +19,31 @@ public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
 
-    @GetMapping
-    public ResponseEntity<List<ScheduleDTO>> getAllSchedules() {
-        List<ScheduleDTO> schedules = scheduleService.getAllSchedules();
-        return ResponseEntity.ok(schedules);
-    }
-
+    //Lấy schedule theo host
     @GetMapping("/{hostId}")
-    public ResponseEntity<List<ScheduleDTO>> getScheduleByHostId(@PathVariable int hostId) {
-        List<ScheduleDTO> schedule = scheduleService.getScheduleByHostId(hostId);
+    public ResponseEntity<List<Schedule>> getScheduleByHostId(@PathVariable int hostId) {
+        List<Schedule> schedule = scheduleService.getScheduleByHostId(hostId);
         return ResponseEntity.ok(schedule);
     }
 
+    //Lưu schedule theo host
     @PostMapping
-    public ResponseEntity<ScheduleDTO> saveSchedule(@RequestBody ScheduleRequestDTO schedule) {
-        ScheduleDTO savedSchedule = scheduleService.saveSchedule(schedule);
+    public ResponseEntity<Schedule> saveSchedule(@RequestBody ScheduleRequestDTO schedule) {
+        Schedule savedSchedule = scheduleService.saveSchedule(schedule);
         return ResponseEntity.ok(savedSchedule);
     }
 
+    //Xóa schedule theo id
     @DeleteMapping("/{scheduleId}")
     public ResponseEntity<Void> deleteSchedule(@PathVariable int scheduleId) {
         scheduleService.deleteSchedule(scheduleId);
+        return ResponseEntity.noContent().build();
+    }
+
+    //Update schedule theo ID
+    @PutMapping("/{scheduleId}")
+    public ResponseEntity<Void> updateSchedule(@PathVariable int scheduleId, @RequestBody ScheduleRequestDTO schedule) {
+        scheduleService.updateSchedule(scheduleId, schedule);
         return ResponseEntity.noContent().build();
     }
 

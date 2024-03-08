@@ -4,7 +4,7 @@ import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Entity.PackageEntity;
 import com.swp391.webapp.Repository.AccountRepository;
 import com.swp391.webapp.Repository.PackageRepository;
-import com.swp391.webapp.dto.Package;
+import com.swp391.webapp.dto.PackageDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,9 +51,14 @@ public class PackageService {
         return packageRepository.findById(packageId);
     }
 
-    public PackageEntity savePackage(Package aPackage) {
-        PackageEntity packageEntity = new PackageEntity(accountUtils.getCurrentAccount(), aPackage.getName(), aPackage.getPrice(), aPackage.getDescription(), aPackage.getPicture());
-        return packageRepository.save(packageEntity);
+    public PackageEntity savePackage(PackageDTO aPackageDTO) {
+        AccountEntity account = accountUtils.getCurrentAccount();
+        if (account.getStatus().equals("Inactivated")) {
+            throw new RuntimeException("This account has not been activated. Please activate before adding packages");
+        } else {
+            PackageEntity packageEntity = new PackageEntity(accountUtils.getCurrentAccount(), aPackageDTO.getName(), aPackageDTO.getPrice(), aPackageDTO.getDescription(), aPackageDTO.getPicture());
+            return packageRepository.save(packageEntity);
+        }
     }
 
     public void deletePackage(int packageId) {
@@ -64,25 +69,27 @@ public class PackageService {
     }
 
     public PackageEntity updateEachFieldById(int id, Map<String, Objects> fields) {
-            Optional<PackageEntity> existingUser = packageRepository.findById(id);
-            if (existingUser.isPresent()) {
-                fields.forEach((key, value) -> {
-                    Field field = ReflectionUtils.findField(PackageEntity.class, key);
-                    field.setAccessible(true);
-                    ReflectionUtils.setField(field, existingUser.get(), value);
-                });
-                return packageRepository.save(existingUser.get());
-            }
-            return null;
+        Optional<PackageEntity> existingUser = packageRepository.findById(id);
+        if (existingUser.isPresent()) {
+            fields.forEach((key, value) -> {
+                Field field = ReflectionUtils.findField(PackageEntity.class, key);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, existingUser.get(), value);
+            });
+            return packageRepository.save(existingUser.get());
+        }
+        return null;
     }
-    public void test(){}
 
-    public PackageEntity updatePackage(int id, Package aPackage) {
+    public void test() {
+    }
+
+    public PackageEntity updatePackage(int id, PackageDTO aPackageDTO) {
         PackageEntity current = packageRepository.findById(id).get();
-        current.setName(aPackage.getName());
-        current.setPrice(aPackage.getPrice());
-        current.setPicture(aPackage.getPicture());
-        current.setDescription(aPackage.getDescription());
+        current.setName(aPackageDTO.getName());
+        current.setPrice(aPackageDTO.getPrice());
+        current.setPicture(aPackageDTO.getPicture());
+        current.setDescription(aPackageDTO.getDescription());
         return packageRepository.save(current);
     }
 

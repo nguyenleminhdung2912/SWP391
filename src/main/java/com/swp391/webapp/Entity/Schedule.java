@@ -7,9 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor
@@ -17,26 +16,24 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @Table(name = "schedule")
-public class ScheduleDTO {
+public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_ID")
-    private Integer scheduleID;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
     @JsonIgnore
     private AccountEntity account;
 
-//    @Column(name = "working_date")
-//    private LocalDate workingDate;
-//
-//    @Column(name = "working_time")
-//    private LocalTime workingTime;
+    @Column(name = "working_date")
+    private Date date;
 
+    @Column(name = "time")
     private Time time;
 
-    @Column(nullable = false)
+    @Column(name = "busy", nullable = false)
     private boolean busy;
 
     // Constructors, getters, setters, etc.
