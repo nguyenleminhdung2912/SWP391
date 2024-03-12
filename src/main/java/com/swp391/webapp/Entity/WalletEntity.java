@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Entity
 @Table(name = "wallet")
-public class WalletDTO {
+public class WalletEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wallet_ID")
@@ -27,7 +27,7 @@ public class WalletDTO {
     @Column(name = "total_money")
     private BigDecimal totalMoney;
 
-    public WalletDTO(AccountEntity account, BigDecimal totalMoney) {
+    public WalletEntity(AccountEntity account, BigDecimal totalMoney) {
         this.account = account;
         this.totalMoney = totalMoney;
     }

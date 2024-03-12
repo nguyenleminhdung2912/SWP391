@@ -2,7 +2,7 @@ package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Config.SecuredRestController;
 import com.swp391.webapp.Entity.AccountEntity;
-import com.swp391.webapp.Entity.WalletDTO;
+import com.swp391.webapp.Entity.WalletEntity;
 import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Service.AccountService;
@@ -103,8 +103,8 @@ public class LoginController implements SecuredRestController {
         accountService.saveAccount(accountEntity);
         mailController.sendMail(accountEntity);
         BigDecimal a = new BigDecimal("0");
-        WalletDTO walletDTO = new WalletDTO(accountEntity, a);
-        walletService.saveWallet(walletDTO);
+        WalletEntity walletEntity = new WalletEntity(accountEntity, a);
+        walletService.saveWallet(walletEntity);
         return accountEntity;
     }
 

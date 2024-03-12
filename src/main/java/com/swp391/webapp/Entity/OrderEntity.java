@@ -46,13 +46,13 @@ public class OrderEntity {
     @Column(nullable = true)
     private OrderStatus status;
 
-    @Column(nullable = true)
+    @Column(name = "venue", nullable = true)
     private String venue;
 
-    @Column(nullable = true)
+    @Column(name = "phone", nullable = true)
     private String phone;
 
-    @Column(nullable = true)
+    @Column(name = "customer_name",nullable = true)
     private String customerName;
 
     @Column(nullable = true)

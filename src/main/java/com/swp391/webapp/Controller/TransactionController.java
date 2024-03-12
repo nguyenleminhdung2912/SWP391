@@ -41,7 +41,6 @@ public class TransactionController {
                 .map(existingTransaction -> {
                     existingTransaction.setOrder(updatedTransaction.getOrder());
                     existingTransaction.setWallet(updatedTransaction.getWallet());
-                    existingTransaction.setVenue(updatedTransaction.getVenue());
                     existingTransaction.setTotalPrice(updatedTransaction.getTotalPrice());
                     transactionService.saveTransaction(existingTransaction);
                     return ResponseEntity.ok(existingTransaction);

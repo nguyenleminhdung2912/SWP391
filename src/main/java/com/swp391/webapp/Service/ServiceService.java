@@ -33,6 +33,9 @@ public class ServiceService {
     public List<ServiceEntity> getAllServices() {
         return serviceRepository.findAll();
     }
+    public List<ServiceEntity> getAllAvailableServices() {
+        return serviceRepository.findServicesByIsDeleted(false);
+    }
 
     public List<ServiceEntity> getAllServicesByHost(int id) {
         return serviceRepository.findServicesByAccountAccountID(id);
@@ -103,13 +106,12 @@ public class ServiceService {
         return null;
     }
 
-    public ServiceEntity updateServiceByID(int id, ServiceEntity serviceEntity) {
+    public ServiceEntity updateServiceByID(int id, ServiceDTO serviceDTO) {
         ServiceEntity current = serviceRepository.findById(id).get();
-        current.setAccount(serviceEntity.getAccount());
-        current.setPrice(serviceEntity.getPrice());
-        current.setName(serviceEntity.getName());
-        current.setDescription(serviceEntity.getDescription());
-        current.setPicture(serviceEntity.getPicture());
+        current.setPrice(serviceDTO.getPrice());
+        current.setName(serviceDTO.getName());
+        current.setDescription(serviceDTO.getDescription());
+        current.setPicture(serviceDTO.getPicture());
         return serviceRepository.save(current);
     }
 

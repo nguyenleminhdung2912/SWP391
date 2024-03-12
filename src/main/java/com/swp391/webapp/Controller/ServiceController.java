@@ -28,9 +28,14 @@ public class ServiceController implements SecuredRestController {
     @Autowired
     ServiceOfPackageRepository serviceOfPackageRepository;
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<ServiceEntity>> getAllServices() {
         List<ServiceEntity> services = serviceService.getAllServices();
+        return ResponseEntity.ok(services);
+    }
+    @GetMapping("/available")
+    public ResponseEntity<List<ServiceEntity>> getAllAvailableServices() {
+        List<ServiceEntity> services = serviceService.getAllAvailableServices();
         return ResponseEntity.ok(services);
     }
     @GetMapping("/package/{packageId}")
@@ -78,8 +83,8 @@ public class ServiceController implements SecuredRestController {
     }
 
     @PutMapping("/{id}")
-    public ServiceEntity updateServiceById(@PathVariable int id, @RequestBody ServiceEntity serviceEntity) {
-        return serviceService.updateServiceByID(id, serviceEntity);
+    public ServiceEntity updateServiceById(@PathVariable int id, @RequestBody ServiceDTO serviceDTO) {
+        return serviceService.updateServiceByID(id, serviceDTO);
     }
 
 }

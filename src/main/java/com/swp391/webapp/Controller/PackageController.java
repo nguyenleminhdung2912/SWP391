@@ -30,6 +30,11 @@ public class PackageController {
         List<PackageEntity> packages = packageService.getAllPackages();
         return ResponseEntity.ok(packages);
     }
+    @GetMapping("/available")
+    public ResponseEntity<List<PackageEntity>> getAllAvailablePackages() {
+        List<PackageEntity> packages = packageService.getAllPackagesAvailable();
+        return ResponseEntity.ok(packages);
+    }
 
     @GetMapping("/hostPackages")
     public ResponseEntity<List<PackageEntity>> getAllHostPackages() {

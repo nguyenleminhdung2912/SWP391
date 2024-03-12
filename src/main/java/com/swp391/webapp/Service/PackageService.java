@@ -42,6 +42,10 @@ public class PackageService {
         return tempList;
     }
 
+    public List<PackageEntity> getAllPackagesAvailable() {
+        return packageRepository.findPackagesByIsDeleted(false);
+    }
+
     public List<PackageEntity> getAllPackagesByPartyHost(int id) {
         AccountEntity account = accountRepository.findAccountByAccountID(id);
         return packageRepository.findPackagesByAccount(account);

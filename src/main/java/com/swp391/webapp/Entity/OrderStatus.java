@@ -4,5 +4,9 @@ import lombok.Data;
 
 public enum OrderStatus {
     PAID,
-    ORDERED
+    ORDERED,
+    REFUSESD,
+    ACCEPTED,
+    DONE,
+    CANCELLED
 }

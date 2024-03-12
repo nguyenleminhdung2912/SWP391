@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ScheduleService {
@@ -33,12 +32,16 @@ public class ScheduleService {
         return scheduleRepository.findSchedulesByAccountAccountID(hostId);
     }
 
+    public Schedule save(Schedule schedule) {
+        return scheduleRepository.save(schedule);
+    }
+
     public Schedule saveSchedule(ScheduleRequestDTO scheduleDTO) {
         Schedule schedule = new Schedule();
         schedule.setDate(scheduleDTO.getDate());
         schedule.setTime(scheduleDTO.getTime());
         schedule.setAccount(accountUtils.getCurrentAccount());
-        schedule.setBusy(!schedule.isBusy());
+        schedule.setBusy(schedule.isBusy());
         return scheduleRepository.save(schedule);
     }
 

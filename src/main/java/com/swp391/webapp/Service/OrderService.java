@@ -1,8 +1,6 @@
 package com.swp391.webapp.Service;
 
-import com.swp391.webapp.Entity.OrderEntity;
-import com.swp391.webapp.Entity.OrderStatus;
-import com.swp391.webapp.Entity.Order_Detail_Entity;
+import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Repository.OrderRepository;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Repository.ScheduleRepository;
@@ -32,6 +30,10 @@ public class OrderService {
     private Order_DetailService orderDetailService;
     @Autowired
     private ServiceRepository serviceRepository;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
+    private WalletService walletService;
 
     // ServiceDTO methods for Order entity
 
@@ -89,6 +91,85 @@ public class OrderService {
         }
         return orderEntity;
     }
+
+    public WalletEntity refuseOrder(int orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+        orderEntity.setStatus(OrderStatus.REFUSESD);
+
+        //Tru tien trong tai khoan admin
+        WalletEntity adminWallet = walletService.getWalletById(1).get();
+        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getTotalPrice().longValue());
+        adminWallet.setTotalMoney(total);
+        walletService.saveWallet(adminWallet);
+
+        //Them tien vao tai khoan guest
+        AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
+        WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
+        total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        return walletService.saveWallet(guestWallet);
+    }
+
+    public OrderEntity acceptOrder(int orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+        orderEntity.setStatus(OrderStatus.ACCEPTED);
+        return orderEntity;
+    }
+
+    public WalletEntity doneOrder(int orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+        orderEntity.setStatus(OrderStatus.DONE);
+
+        //Tru tien trong tai khoan admin
+        WalletEntity adminWallet = walletService.getWalletById(1).get();
+        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getTotalPrice().longValue());
+        adminWallet.setTotalMoney(total);
+        walletService.saveWallet(adminWallet);
+
+        //Them tien vao tai khoan host
+        AccountEntity hostAccount = accountService.getAccountById(orderEntity.getPackageEntity().getAccount().getAccountID()).get();
+        WalletEntity hostWallet = walletService.getWalletById(hostAccount.getAccountID()).get();
+        total = new BigDecimal(hostWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        return walletService.saveWallet(hostWallet);
+    }
+
+    public WalletEntity cancelOrder(int orderId) {
+        OrderEntity orderEntity = orderRepository.findById(orderId).get();
+        orderEntity.setStatus(OrderStatus.CANCELLED);
+
+        //Tru tien trong tai khoan admin
+        WalletEntity adminWallet = walletService.getWalletById(1).get();
+        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getTotalPrice().longValue());
+        adminWallet.setTotalMoney(total);
+        walletService.saveWallet(adminWallet);
+
+        //Them tien vao tai khoan guest
+        AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
+        WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
+        total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        return walletService.saveWallet(guestWallet);
+    }
+
+    public List<OrderEntity> getPendingOrder() {
+        return orderRepository.findOrdersByStatus(OrderStatus.ORDERED);
+    }
+
+    public List<OrderEntity> getDoneOrder() {
+        return orderRepository.findOrdersByStatus(OrderStatus.DONE);
+    }
+    public List<OrderEntity> getRefusedOrder() {
+        return orderRepository.findOrdersByStatus(OrderStatus.REFUSESD);
+    }
+    public List<OrderEntity> getAcceptedOrder() {
+        return orderRepository.findOrdersByStatus(OrderStatus.ACCEPTED);
+    }
+    public List<OrderEntity> getCancelOrder() {
+        return orderRepository.findOrdersByStatus(OrderStatus.CANCELLED);
+    }
+
+    public List<OrderEntity> getAllOrdersByHost(int hostId) {
+        return orderRepository.findOrdersByHost(hostId);
+    }
+
 
     // Additional service methods if needed
 }

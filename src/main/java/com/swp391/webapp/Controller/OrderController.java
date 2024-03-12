@@ -1,17 +1,15 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.OrderEntity;
-import com.swp391.webapp.Entity.OrderStatus;
-import com.swp391.webapp.Entity.Schedule;
+import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Repository.OrderRepository;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Repository.ScheduleRepository;
-import com.swp391.webapp.Service.OrderService;
-import com.swp391.webapp.Service.ScheduleService;
+import com.swp391.webapp.Service.*;
 import com.swp391.webapp.dto.OrderDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Mac;
@@ -40,9 +38,14 @@ public class OrderController {
     private OrderRepository orderRepository;
     @Autowired
     private PackageRepository packageRepository;
-
     @Autowired
-    AccountUtils accountUtils;
+    private AccountService accountService;
+    @Autowired
+    private WalletService walletService;
+    @Autowired
+    private TransactionService transactionService;
+    @Autowired
+    private AccountUtils accountUtils;
 
     @GetMapping
     public ResponseEntity<List<OrderEntity>> getAllOrders() {
@@ -56,17 +59,17 @@ public class OrderController {
         return ResponseEntity.ok(Order);
     }
 
+    @GetMapping("/host/{hostId}")
+    public ResponseEntity<List<OrderEntity>> getAllOrdersByHost(@PathVariable int hostId) {
+        List<OrderEntity> Orders = orderService.getAllOrdersByHost(hostId);
+        return ResponseEntity.ok(Orders);
+    }
+
 //    @PostMapping("making-order")
 //    public ResponseEntity<OrderEntity> saveOrder(@RequestBody OrderDTO Order) {
 //        OrderEntity savedOrder = orderService.makeOrder(Order);
 //        return ResponseEntity.ok(savedOrder);
 //    }
-
-    @DeleteMapping("/{OrderId}")
-    public ResponseEntity<Void> deleteOrder(@PathVariable int OrderId) {
-        orderService.deleteOrder(OrderId);
-        return ResponseEntity.noContent().build();
-    }
 
     @PostMapping("/create-payment")
     public ResponseEntity createUrl(@RequestBody OrderDTO orderDTO) throws NoSuchAlgorithmException, InvalidKeyException, Exception {
@@ -76,12 +79,15 @@ public class OrderController {
         String formattedCreateDate = createDate.format(formatter);
         //Lấy thời gian đặt lịch
         Schedule schedule = scheduleService.findScheduleByID(orderDTO.getScheduleId());
+        schedule.setBusy(true);
+        scheduleService.save(schedule);
         OrderEntity ordered = new OrderEntity();
         //Tạo thời gian đặt order
         ordered.setCreateAt(new Date());
         //Lấy tài khoản người đặt
         ordered.setAccount(accountUtils.getCurrentAccount());
-        ordered.setPackageEntity(packageRepository.findPackageByPackageID(orderDTO.getPackageId()));
+        PackageEntity packageEntity = packageRepository.findPackageByPackageID(orderDTO.getPackageId());
+        ordered.setPackageEntity(packageEntity);
         ordered.setSchedule(schedule);
         //Đặt trạng thái của order
         ordered.setStatus(OrderStatus.ORDERED);
@@ -146,14 +152,67 @@ public class OrderController {
         return ResponseEntity.ok(urlBuilder.toString());
     }
 
+    //Guest thanh toan cho order
+    //Them tien vao vi admin
+    //Tao transaction
+    //Update status = PAID cho order
     @GetMapping("/update-order")
     public OrderEntity orderSuccess(@RequestParam int orderId){
         OrderEntity ordered = orderService.findOrderById(orderId);
         ordered.setStatus(OrderStatus.PAID);
-        //Cập nhật ví
-
+        //Tru tien tai khoan guest
+        //Tai khoan ngan hang cua Guest truc tiep chuyen vao wallet cua admin
+        //Them tien vo tai khoan admin
+        walletService.guestPayForOrder(ordered);
+        //Lay tai khoan cua Guest
+        WalletEntity guestWallet = walletService.getWalletByAccount(ordered.getAccount());
+        //Luu transaction
+        TransactionEntity transaction = new TransactionEntity(ordered, guestWallet, ordered.getCreateAt(), ordered.getTotalPrice());
+        transactionService.saveTransaction(transaction);
 
         return orderService.saveOrder(ordered);
+    }
+
+    @GetMapping("/ordered/pending")
+    public List<OrderEntity> getPendingOrder(){
+        return orderService.getPendingOrder();
+    }
+
+    @GetMapping("/ordered/done")
+    public List<OrderEntity> getDoneOrder(){
+        return orderService.getDoneOrder();
+    }
+    @GetMapping("/ordered/accepted")
+    public List<OrderEntity> getAcceptedOrder(){
+        return orderService.getAcceptedOrder();
+    }
+    @GetMapping("/ordered/refused")
+    public List<OrderEntity> getRefusedOrder(){
+        return orderService.getRefusedOrder();
+    }
+    @GetMapping("/ordered/cancelled")
+    public List<OrderEntity> getcancelledOrder(){
+        return orderService.getCancelOrder();
+    }
+
+    @PostMapping("/host/refuse-order/{orderId}")
+    public void refuseOrder(@PathVariable int orderId){
+        orderService.refuseOrder(orderId);
+    }
+
+    @PostMapping("/host/accept-order/{orderId}")
+    public void acceptOrder(@PathVariable int orderId){
+        orderService.acceptOrder(orderId);
+    }
+
+    @PostMapping("/guest/done-order/{orderId}")
+    public void doneOrder(@PathVariable int orderId){
+        orderService.doneOrder(orderId);
+    }
+
+    @PostMapping("/guest/cancel-order/{orderId}")
+    public void cancelOrder(@PathVariable int orderId){
+        orderService.cancelOrder(orderId);
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {

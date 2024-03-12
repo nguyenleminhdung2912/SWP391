@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.Date;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -26,13 +28,20 @@ public class TransactionEntity {
 
     @ManyToOne
     @JoinColumn(name = "wallet_ID", nullable = false)
-    private WalletDTO wallet;
+    private WalletEntity wallet;
 
-    @Column
-    private String venue;
+    @Column(name = "date")
+    private Date createAt;
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    public TransactionEntity(OrderEntity order, WalletEntity wallet, Date createAt, BigDecimal totalPrice) {
+        this.order = order;
+        this.wallet = wallet;
+        this.createAt = createAt;
+        this.totalPrice = totalPrice;
+    }
 
     // Constructors, getters, setters, etc.
 }
