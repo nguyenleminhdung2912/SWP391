@@ -1,4 +1,4 @@
-package com.swp391.webapp.Entity;
+package com.swp391.webapp.Entity.Enum;
 
 import lombok.Data;
 

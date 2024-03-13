@@ -1,6 +1,7 @@
 package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Entity.*;
+import com.swp391.webapp.Entity.Enum.OrderStatus;
 import com.swp391.webapp.Repository.OrderRepository;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Repository.ScheduleRepository;
@@ -9,7 +10,6 @@ import com.swp391.webapp.dto.OrderDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Mac;
@@ -59,6 +59,18 @@ public class OrderController {
         return ResponseEntity.ok(Order);
     }
 
+    @GetMapping("/guest")
+    public ResponseEntity<List<OrderEntity>> getAllOrdersByGuest() {
+        List<OrderEntity> Orders = orderService.getAllOrdersByGuest();
+        return ResponseEntity.ok(Orders);
+    }
+
+    @GetMapping("/guest/{accountId}")
+    public ResponseEntity<List<OrderEntity>> getAllOrdersByGuestId(@PathVariable int accountId) {
+        List<OrderEntity> Orders = orderService.getAllOrdersByGuestId(accountId);
+        return ResponseEntity.ok(Orders);
+    }
+
     @GetMapping("/host/{hostId}")
     public ResponseEntity<List<OrderEntity>> getAllOrdersByHost(@PathVariable int hostId) {
         List<OrderEntity> Orders = orderService.getAllOrdersByHost(hostId);
@@ -89,9 +101,12 @@ public class OrderController {
         PackageEntity packageEntity = packageRepository.findPackageByPackageID(orderDTO.getPackageId());
         ordered.setPackageEntity(packageEntity);
         ordered.setSchedule(schedule);
+        //Lấy quantity ra
+        int quantity = orderDTO.getOrderDetailDTOList().size();
         //Đặt trạng thái của order
         ordered.setStatus(OrderStatus.ORDERED);
         ordered.setTotalPrice(BigDecimal.valueOf(orderDTO.getTotalPrice()));
+        ordered.setQuantity(quantity+1);
         ordered.setPhone(orderDTO.getPhoneNumber());
         ordered.setCustomerName(orderDTO.getUsername());
         ordered.setVenue(orderDTO.getVenue());

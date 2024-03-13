@@ -36,7 +36,7 @@ public class PackageController {
         return ResponseEntity.ok(packages);
     }
 
-    @GetMapping("/hostPackages")
+    @GetMapping("/packages-of-host/no-variable")
     public ResponseEntity<List<PackageEntity>> getAllHostPackages() {
         List<PackageEntity> packages = packageService.getAllPackagesByPartyHost();
         return ResponseEntity.ok(packages);

@@ -33,12 +33,6 @@ public class PackageService {
 
     public List<PackageEntity> getAllPackagesByPartyHost() {
         List<PackageEntity> tempList = packageRepository.findPackagesByAccountAndIsDeletedFalse(accountUtils.getCurrentAccount());
-
-//        for (int i = 0; i < tempList.size(); i++) {
-//            if (tempList.get(i).isDeleted() == true) {
-//                tempList.remove(tempList.get(i));
-//            }
-//        }
         return tempList;
     }
 
@@ -48,7 +42,7 @@ public class PackageService {
 
     public List<PackageEntity> getAllPackagesByPartyHost(int id) {
         AccountEntity account = accountRepository.findAccountByAccountID(id);
-        return packageRepository.findPackagesByAccount(account);
+        return packageRepository.findPackagesByAccountAndIsDeletedFalse(account);
     }
 
     public Optional<PackageEntity> getPackageById(int packageId) {

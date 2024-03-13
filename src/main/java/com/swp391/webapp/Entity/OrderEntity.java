@@ -1,5 +1,6 @@
 package com.swp391.webapp.Entity;
 
+import com.swp391.webapp.Entity.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Optional;
 
 @NoArgsConstructor
 @AllArgsConstructor

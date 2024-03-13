@@ -1,12 +1,12 @@
 package com.swp391.webapp.Controller;
 
-import com.swp391.webapp.Entity.OrderEntity;
-import com.swp391.webapp.Entity.OrderStatus;
-import com.swp391.webapp.Entity.Schedule;
-import com.swp391.webapp.Entity.WalletEntity;
+import com.swp391.webapp.Entity.*;
+import com.swp391.webapp.Entity.Enum.WalletTransactionStatus;
 import com.swp391.webapp.Service.WalletService;
+import com.swp391.webapp.Service.WalletTransactionService;
 import com.swp391.webapp.dto.OrderDTO;
 import com.swp391.webapp.dto.WalletDTO;
+import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +31,10 @@ public class WalletController {
 
     @Autowired
     private WalletService walletService;
+    @Autowired
+    private AccountUtils accountUtils;
+    @Autowired
+    private WalletTransactionService walletTransactionService;
 
     @GetMapping()
     public WalletEntity getWalletByAccount() {
@@ -109,9 +113,21 @@ public class WalletController {
         }
         urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
 
-        walletService.addMoneyToWallet(walletDTO);
+        //Luu transaction
+        WalletTransactionEntity walletTransactionEntity = new WalletTransactionEntity(accountUtils.getCurrentAccount(), walletService.getWalletByAccount(accountUtils.getCurrentAccount()), createDate, walletDTO.getAmount());
+        walletTransactionService.saveTransaction(walletTransactionEntity);
 
         return ResponseEntity.ok(urlBuilder.toString());
+    }
+
+    @GetMapping("/update-wallet")
+    public WalletEntity addMoneySuccess(@RequestParam int walletTransactionId){
+        //Them tien vao tai khoan cua Guest
+        WalletEntity guestWallet = walletService.getWalletByAccount(accountUtils.getCurrentAccount());
+        WalletTransactionEntity walletTransactionEntity = walletTransactionService.getTransactionById(walletTransactionId);
+        walletTransactionEntity.setWalletTransactionStatus(WalletTransactionStatus.DONE);
+        walletTransactionService.saveTransaction(walletTransactionEntity);
+        return walletService.addMoneyToWallet(walletTransactionEntity);
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {

@@ -3,6 +3,7 @@ package com.swp391.webapp.Service;
 import com.swp391.webapp.Entity.AccountEntity;
 import com.swp391.webapp.Entity.OrderEntity;
 import com.swp391.webapp.Entity.WalletEntity;
+import com.swp391.webapp.Entity.WalletTransactionEntity;
 import com.swp391.webapp.Repository.WalletRepository;
 import com.swp391.webapp.dto.WalletDTO;
 import com.swp391.webapp.utils.AccountUtils;
@@ -63,11 +64,11 @@ public class WalletService {
         return walletRepository.findWalletByAccount(account);
     }
 
-    public WalletEntity addMoneyToWallet(WalletDTO walletDTO){
+    public WalletEntity addMoneyToWallet(WalletTransactionEntity walletTransactionEntity){
         AccountEntity account = accountUtils.getCurrentAccount();
         WalletEntity wallet = walletRepository.findWalletByAccount(account);
         BigDecimal total = new BigDecimal(0);
-        total = total.add(walletDTO.getAmount());
+        total = total.add(walletTransactionEntity.getTotalPrice());
         total = total.add(wallet.getTotalMoney());
         wallet.setTotalMoney(total);
         return walletRepository.save(wallet);

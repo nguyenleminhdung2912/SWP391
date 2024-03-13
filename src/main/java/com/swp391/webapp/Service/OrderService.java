@@ -1,6 +1,7 @@
 package com.swp391.webapp.Service;
 
 import com.swp391.webapp.Entity.*;
+import com.swp391.webapp.Entity.Enum.OrderStatus;
 import com.swp391.webapp.Repository.OrderRepository;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Repository.ScheduleRepository;
@@ -168,6 +169,15 @@ public class OrderService {
 
     public List<OrderEntity> getAllOrdersByHost(int hostId) {
         return orderRepository.findOrdersByHost(hostId);
+    }
+
+    public List<OrderEntity> getAllOrdersByGuest() {
+        return orderRepository.findOrdersByAccount(accountUtils.getCurrentAccount());
+    }
+
+    public List<OrderEntity> getAllOrdersByGuestId(int accountId) {
+        AccountEntity account = accountService.getAccountById(accountId).get();
+        return orderRepository.findOrdersByAccount(account);
     }
 
 

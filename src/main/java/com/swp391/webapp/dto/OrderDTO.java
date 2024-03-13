@@ -1,12 +1,10 @@
 package com.swp391.webapp.dto;
 
-import com.swp391.webapp.Entity.AccountEntity;
-import com.swp391.webapp.Entity.OrderStatus;
+import com.swp391.webapp.Entity.Enum.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
