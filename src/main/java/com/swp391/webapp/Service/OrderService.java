@@ -2,10 +2,7 @@ package com.swp391.webapp.Service;
 
 import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Entity.Enum.OrderStatus;
-import com.swp391.webapp.Repository.OrderRepository;
-import com.swp391.webapp.Repository.PackageRepository;
-import com.swp391.webapp.Repository.ScheduleRepository;
-import com.swp391.webapp.Repository.ServiceRepository;
+import com.swp391.webapp.Repository.*;
 import com.swp391.webapp.dto.OrderDTO;
 import com.swp391.webapp.dto.OrderDetailDTO;
 import com.swp391.webapp.utils.AccountUtils;
@@ -35,6 +32,8 @@ public class OrderService {
     private AccountService accountService;
     @Autowired
     private WalletService walletService;
+    @Autowired
+    private Order_Detail_Repository order_Detail_Repository;
 
     // ServiceDTO methods for Order entity
 
@@ -76,7 +75,7 @@ public class OrderService {
 
         List<OrderDetailDTO> list = order.getOrderDetailDTOList();
         for (int i = 0; i < list.size(); i++) {
-            Order_Detail_Entity orderDetailEntity = new Order_Detail_Entity();
+            OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
             orderDetailEntity.setService(serviceRepository.findById(list.get(i).getId()).get());
             orderDetailEntity.setOrder(orderRepository.findById(orderEntity.getOrderID()).get());
         }
@@ -86,9 +85,10 @@ public class OrderService {
     public OrderEntity createOrder(OrderEntity Order, List<OrderDetailDTO> list) {
         OrderEntity orderEntity = orderRepository.save(Order);
         for (int i = 0; i < list.size(); i++) {
-            Order_Detail_Entity orderDetailEntity = new Order_Detail_Entity();
+            OrderDetailEntity orderDetailEntity = new OrderDetailEntity();
             orderDetailEntity.setService(serviceRepository.findById(list.get(i).getId()).get());
             orderDetailEntity.setOrder(orderRepository.findById(orderEntity.getOrderID()).get());
+            order_Detail_Repository.save(orderDetailEntity);
         }
         return orderEntity;
     }
@@ -96,6 +96,9 @@ public class OrderService {
     public WalletEntity refuseOrder(int orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         orderEntity.setStatus(OrderStatus.REFUSESD);
+        orderRepository.save(orderEntity);
+
+        System.out.println("đã refused");
 
         //Tru tien trong tai khoan admin
         WalletEntity adminWallet = walletService.getWalletById(1).get();
@@ -113,12 +116,16 @@ public class OrderService {
     public OrderEntity acceptOrder(int orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         orderEntity.setStatus(OrderStatus.ACCEPTED);
+        orderRepository.save(orderEntity);
+        System.out.println("đã accept");
+
         return orderEntity;
     }
 
     public WalletEntity doneOrder(int orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         orderEntity.setStatus(OrderStatus.DONE);
+        orderRepository.save(orderEntity);
 
         //Tru tien trong tai khoan admin
         WalletEntity adminWallet = walletService.getWalletById(1).get();

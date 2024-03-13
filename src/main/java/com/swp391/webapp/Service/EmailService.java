@@ -25,7 +25,8 @@ public class EmailService {
 
             context.setVariable("name", emailDetail.getName());
 
-            String link = "http://localhost:8080/auth/verify/" + emailDetail.getRecipient();
+//            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
+            String link = "http://localhost:5173/login";
 
             context.setVariable("link", link);
 

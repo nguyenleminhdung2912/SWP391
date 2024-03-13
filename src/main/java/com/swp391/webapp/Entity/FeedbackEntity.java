@@ -31,6 +31,9 @@ public class FeedbackEntity {
     @Column
     private String description;
 
+    @Column(name = "rating")
+    private int rating;
+
     @Column(name = "feedback_date")
     private LocalDate feedbackDate;
 

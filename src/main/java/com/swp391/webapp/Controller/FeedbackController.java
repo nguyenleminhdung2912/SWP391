@@ -2,6 +2,7 @@ package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Entity.FeedbackEntity;
 import com.swp391.webapp.Service.FeedbackService;
+import com.swp391.webapp.dto.FeedbackDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,9 @@ public class FeedbackController {
         return ResponseEntity.ok(FeedbackEntity);
     }
 
-    @PostMapping
-    public ResponseEntity<FeedbackEntity> saveFeedback(@RequestBody FeedbackEntity feedbackEntity) {
-        FeedbackEntity savedFeedbackEntity = feedbackService.saveFeedback(feedbackEntity);
+    @PostMapping("/addFeedback/{orderId}")
+    public ResponseEntity<FeedbackDTO> saveFeedback(@PathVariable int orderId,@RequestBody FeedbackDTO feedbackDTO) {
+        FeedbackDTO savedFeedbackEntity = feedbackService.saveFeedback(orderId, feedbackDTO);
         return ResponseEntity.ok(savedFeedbackEntity);
     }
 

@@ -84,10 +84,14 @@ public class PackageService {
 
     public PackageEntity updatePackage(int id, PackageDTO aPackageDTO) {
         PackageEntity current = packageRepository.findById(id).get();
-        current.setName(aPackageDTO.getName());
-        current.setPrice(aPackageDTO.getPrice());
-        current.setPicture(aPackageDTO.getPicture());
-        current.setDescription(aPackageDTO.getDescription());
+        if (!(aPackageDTO.getName() == null))
+            current.setName(aPackageDTO.getName());
+        if (!(aPackageDTO.getPrice() == null))
+            current.setPrice(aPackageDTO.getPrice());
+        if (!(aPackageDTO.getPicture() == null))
+            current.setPicture(aPackageDTO.getPicture());
+        if (!(aPackageDTO.getDescription() == null))
+            current.setDescription(aPackageDTO.getDescription());
         return packageRepository.save(current);
     }
 
