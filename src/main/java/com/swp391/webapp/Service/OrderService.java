@@ -6,10 +6,12 @@ import com.swp391.webapp.Repository.*;
 import com.swp391.webapp.dto.OrderDTO;
 import com.swp391.webapp.dto.OrderDetailDTO;
 import com.swp391.webapp.utils.AccountUtils;
+import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -110,6 +112,7 @@ public class OrderService {
         AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
         WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
         total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        guestWallet.setTotalMoney(total);
         return walletService.saveWallet(guestWallet);
     }
 
@@ -185,6 +188,17 @@ public class OrderService {
     public List<OrderEntity> getAllOrdersByGuestId(int accountId) {
         AccountEntity account = accountService.getAccountById(accountId).get();
         return orderRepository.findOrdersByAccount(account);
+    }
+
+    public List<OrderEntity> getAllOrderByHostAndCreateBetweenAndStatusDone(int hostId, Date startDate, Date endDate, OrderStatus orderStatus){
+        List<OrderEntity> orderEntitiesList = orderRepository.findOrdersByHost(hostId);
+        List<OrderEntity> returnOrderList = new ArrayList<>();
+        for (int i = 0; i < orderEntitiesList.size(); i++) {
+            if (orderEntitiesList.get(i).getCreateAt().after(startDate) && orderEntitiesList.get(i).getCreateAt().after(endDate) && orderEntitiesList.get(i).getStatus().equals(orderStatus.DONE)) {
+                returnOrderList.add(orderEntitiesList.get(i));
+            }
+        }
+        return returnOrderList;
     }
 
 

@@ -125,6 +125,7 @@ public class OrderController {
         String secretKey = "AFWMAKAMRNPUQTQWFDCGXTXPQBQKFIRF";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         String returnUrl = "http://localhost:5173/success";
+        String returnfailUrl = "http://localhost:5173/fail";
 
         String currCode = "VND";
         Map<String, String> vnpParams = new TreeMap<>();
@@ -188,27 +189,27 @@ public class OrderController {
         return orderService.saveOrder(ordered);
     }
 
-    @GetMapping("/ordered/pending")
-    public List<OrderEntity> getPendingOrder(){
-        return orderService.getPendingOrder();
-    }
-
-    @GetMapping("/ordered/done")
-    public List<OrderEntity> getDoneOrder(){
-        return orderService.getDoneOrder();
-    }
-    @GetMapping("/ordered/accepted")
-    public List<OrderEntity> getAcceptedOrder(){
-        return orderService.getAcceptedOrder();
-    }
-    @GetMapping("/ordered/refused")
-    public List<OrderEntity> getRefusedOrder(){
-        return orderService.getRefusedOrder();
-    }
-    @GetMapping("/ordered/cancelled")
-    public List<OrderEntity> getcancelledOrder(){
-        return orderService.getCancelOrder();
-    }
+//    @GetMapping("/ordered/pending")
+//    public List<OrderEntity> getPendingOrder(){
+//        return orderService.getPendingOrder();
+//    }
+//
+//    @GetMapping("/ordered/done")
+//    public List<OrderEntity> getDoneOrder(){
+//        return orderService.getDoneOrder();
+//    }
+//    @GetMapping("/ordered/accepted")
+//    public List<OrderEntity> getAcceptedOrder(){
+//        return orderService.getAcceptedOrder();
+//    }
+//    @GetMapping("/ordered/refused")
+//    public List<OrderEntity> getRefusedOrder(){
+//        return orderService.getRefusedOrder();
+//    }
+//    @GetMapping("/ordered/cancelled")
+//    public List<OrderEntity> getcancelledOrder(){
+//        return orderService.getCancelOrder();
+//    }
 
     @PostMapping("/host/refuse-order/{orderId}")
     public void refuseOrder(@PathVariable int orderId){

@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.function.Function;
 
 @Component
-public class JWTService {
+public class  JWTService {
     private static final String SECRET = "!@#$FDGSDFGSGSGSGSHSHSHSSHGFFDSGSFGSSGHSDFSDFSFSFSFSDFSFSFSFDSADSA";
     private final long EXPIRATION = 1 * 24 * 60 * 60 * 1000;
     public String generateToken(String email) {

@@ -73,7 +73,7 @@ public class WalletController {
         String tmnCode = "II9036T8";
         String secretKey = "AFWMAKAMRNPUQTQWFDCGXTXPQBQKFIRF";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "http://localhost:5173/success";
+        String returnUrl = "http://localhost:5173/addMoneySuccess";
 
         String currCode = "VND";
         Map<String, String> vnpParams = new TreeMap<>();
@@ -123,10 +123,16 @@ public class WalletController {
     @GetMapping("/update-wallet")
     public WalletEntity addMoneySuccess(@RequestParam int walletTransactionId){
         //Them tien vao tai khoan cua Guest
+        //Lay vi cua Guest
         WalletEntity guestWallet = walletService.getWalletByAccount(accountUtils.getCurrentAccount());
+
         WalletTransactionEntity walletTransactionEntity = walletTransactionService.getTransactionById(walletTransactionId);
+
+        //Tao transaction
         walletTransactionEntity.setWalletTransactionStatus(WalletTransactionStatus.DONE);
         walletTransactionService.saveTransaction(walletTransactionEntity);
+
+        //Luu tien vao tai khoan
         return walletService.addMoneyToWallet(walletTransactionEntity);
     }
 

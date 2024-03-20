@@ -14,6 +14,6 @@ public interface AccountRepository extends JpaRepository<AccountEntity, Integer>
     AccountEntity findAccountByAccountID(long id);
 
     List<AccountEntity> findAccountsByIsDeleted(int deleted);
+    List<AccountEntity> findAccountsByRoleAndIsDeleted(String role, int deleted);
 
-    void deleteAccountByAccountID(int id);
 }

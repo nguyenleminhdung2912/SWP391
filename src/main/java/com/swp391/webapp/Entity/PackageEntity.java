@@ -29,6 +29,7 @@ public class PackageEntity {
     @Column(nullable = false)
     private BigDecimal price;
 
+
     @Column
     private String description;
 
