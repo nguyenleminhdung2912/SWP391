@@ -23,6 +23,8 @@ public class OrderDTO {
 
     private Date createAt;
 
+    private int slots;
+
     private OrderStatus status = OrderStatus.ORDERED;
 
     private String venue;

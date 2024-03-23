@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Data
 public class PackageDTO {
     String name;
+    Integer slot;
     BigDecimal price;
     String description;
     String picture;

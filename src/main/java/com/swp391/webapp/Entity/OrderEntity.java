@@ -37,8 +37,17 @@ public class OrderEntity {
     @Column(nullable = false)
     private int quantity;
 
+    @Column(nullable = true)
+    private int slots;
+
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+
+    @Column(nullable = true)
+    private BigDecimal depositedMoney;
+
+    @Column(nullable = true)
+    private BigDecimal remainingMoney;
 
     @Column(nullable = true)
     private Date createAt;

@@ -21,14 +21,19 @@ public class FeedbackEntity {
     private Integer feedbackID;
 
     @ManyToOne
-    @JoinColumn(name = "account_ID", nullable = false)
-    private AccountEntity account;
+    @JoinColumn(name = "host_ID", nullable = false)
+    private AccountEntity host;
 
     @ManyToOne
-    @JoinColumn(name = "service_ID", nullable = false)
-    private ServiceEntity service;
+    @JoinColumn(name = "guest_ID", nullable = false)
+    private AccountEntity guest;
 
-    @Column
+    @ManyToOne
+    @JoinColumn(name = "package_ID", nullable = false)
+    private PackageEntity aPackage;
+
+
+    @Column(name = "description")
     private String description;
 
     @Column(name = "rating")

@@ -7,10 +7,13 @@ import com.swp391.webapp.Service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
-@Service
+//@Service
+@RestController
 @CrossOrigin("*")
 public class MailController {
 
@@ -19,30 +22,99 @@ public class MailController {
     @Autowired
     AccountService accountService;
 
-//    @GetMapping("/test/{id}")
+    @GetMapping("/test/sendMail")
     public void sendMail(AccountEntity accountEntity){
         try {
-            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setName(accountEntity.getName());
+            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("test123");
             emailDetail.setMsgBody("Test send vertify mail");
-            emailDetail.setName(accountEntity.getName());
+            emailDetail.setName("Minh Dung");
             emailService.sendMailTemplate(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    @GetMapping("/test/sendHostCongrats")
     public void sendHostCongrats(AccountEntity accountEntity) {
         try {
-            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setName(accountEntity.getName());
+            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("Congratulation!");
             emailDetail.setMsgBody("Your account has been verified!");
             emailDetail.setName(accountEntity.getName());
             emailService.sendCongratsHostTemplate(emailDetail);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @GetMapping("/test/sendHostGuestHasCancelled")
+    public void sendHostGuestHasCancelled(AccountEntity accountEntity) {
+        try {
+//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            EmailDetail emailDetail = new EmailDetail();
+//            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setName(accountEntity.getName());
+            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setSubject("Congratulation!");
+            emailDetail.setMsgBody("Your account has been verified!");
+            emailDetail.setName(accountEntity.getName());
+            emailService.sendHostGuestHasCancelled(emailDetail);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @GetMapping("/test/sendGuestBookingInformation")
+    public void sendGuestBookingInformation(AccountEntity accountEntity) {
+        try {
+//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            EmailDetail emailDetail = new EmailDetail();
+//            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setName(accountEntity.getName());
+            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setSubject("Congratulation!");
+            emailDetail.setMsgBody("Your account has been verified!");
+            emailDetail.setName(accountEntity.getName());
+            emailService.sendGuestBookingInformation(emailDetail);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @GetMapping("/test/sendGuestHostHasRefusedOrder")
+    public void sendGuestHostHasRefusedOrder(AccountEntity accountEntity) {
+        try {
+//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            EmailDetail emailDetail = new EmailDetail();
+//            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setName(accountEntity.getName());
+            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setSubject("Congratulation!");
+            emailDetail.setMsgBody("Your account has been verified!");
+            emailDetail.setName(accountEntity.getName());
+            emailService.sendGuestHostHasRefusedOrder(emailDetail);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @GetMapping("/test/sendGuestHostHasAcceptOrder")
+    public void sendGuestHostHasAcceptOrder(AccountEntity accountEntity) {
+        try {
+//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            EmailDetail emailDetail = new EmailDetail();
+//            emailDetail.setRecipient(account.get().getEmail());
+//            emailDetail.setName(accountEntity.getName());
+            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setSubject("Congratulation!");
+            emailDetail.setMsgBody("Your account has been verified!");
+            emailDetail.setName(accountEntity.getName());
+            emailService.sendGuestHostHasAcceptOrder(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
         }

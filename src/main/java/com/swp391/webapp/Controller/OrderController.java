@@ -91,7 +91,7 @@ public class OrderController {
         String formattedCreateDate = createDate.format(formatter);
         //Lấy thời gian đặt lịch
         Schedule schedule = scheduleService.findScheduleByID(orderDTO.getScheduleId());
-        schedule.setBusy(true);
+//        schedule.setBusy(true);
         scheduleService.save(schedule);
         OrderEntity ordered = new OrderEntity();
         //Tạo thời gian đặt order
@@ -103,22 +103,22 @@ public class OrderController {
         ordered.setSchedule(schedule);
         //Lấy quantity ra
         int quantity = orderDTO.getOrderDetailDTOList().size();
+        //Lay so tien can dat coc
+        long depositMoney = orderDTO.getTotalPrice() * 40 / 100;
         //Đặt trạng thái của order
         ordered.setStatus(OrderStatus.ORDERED);
         ordered.setTotalPrice(BigDecimal.valueOf(orderDTO.getTotalPrice()));
         ordered.setQuantity(quantity+1);
+        ordered.setSlots(orderDTO.getSlots());
         ordered.setPhone(orderDTO.getPhoneNumber());
         ordered.setCustomerName(orderDTO.getUsername());
+        ordered.setDepositedMoney(BigDecimal.valueOf(depositMoney));
+        ordered.setRemainingMoney(BigDecimal.valueOf(orderDTO.getTotalPrice() - depositMoney));
         ordered.setVenue(orderDTO.getVenue());
         ordered.setCustomerEmail(orderDTO.getEmail());
 
-//        ordered.setNameReceiver(orderedDTO.getNameReceiver());
-//        ordered.setPhone(orderedDTO.getPhone());
-//        ordered.setEmail(orderedDTO.getEmail());
-//        ordered.setSlot(orderedDTO.getSlot());
-//        ordered.setAdditionalNotes(orderedDTO.getAdditionalNotes());
 
-//        OrderEntity newOrder = orderRepository.save(ordered);
+
         OrderEntity newOrder = orderService.createOrder(ordered, orderDTO.getOrderDetailDTOList());
 
         String tmnCode = "II9036T8";
@@ -137,7 +137,7 @@ public class OrderController {
         vnpParams.put("vnp_TxnRef", newOrder.getOrderID()+"");
         vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + newOrder.getOrderID()+"");
         vnpParams.put("vnp_OrderType", "other");
-        vnpParams.put("vnp_Amount", String.valueOf(100 * orderDTO.getTotalPrice()));
+        vnpParams.put("vnp_Amount", String.valueOf(100 * depositMoney));
         vnpParams.put("vnp_ReturnUrl", returnUrl);
         vnpParams.put("vnp_CreateDate", formattedCreateDate);
         vnpParams.put("vnp_IpAddr", "http://birthdayblitzhub.online/");
@@ -172,6 +172,7 @@ public class OrderController {
     //Them tien vao vi admin
     //Tao transaction
     //Update status = PAID cho order
+    //Dat coc = 40% tong gia tri don hang
     @GetMapping("/update-order")
     public OrderEntity orderSuccess(@RequestParam int orderId){
         OrderEntity ordered = orderService.findOrderById(orderId);
@@ -183,7 +184,7 @@ public class OrderController {
         //Lay tai khoan cua Guest
         WalletEntity guestWallet = walletService.getWalletByAccount(ordered.getAccount());
         //Luu transaction
-        TransactionEntity transaction = new TransactionEntity(ordered, guestWallet, ordered.getCreateAt(), ordered.getTotalPrice());
+        TransactionEntity transaction = new TransactionEntity(ordered, guestWallet, ordered.getCreateAt(), ordered.getDepositedMoney());
         transactionService.saveTransaction(transaction);
 
         return orderService.saveOrder(ordered);

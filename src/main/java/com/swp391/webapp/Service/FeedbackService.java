@@ -1,13 +1,7 @@
 package com.swp391.webapp.Service;
 
-import com.swp391.webapp.Entity.FeedbackEntity;
-import com.swp391.webapp.Entity.OrderEntity;
-import com.swp391.webapp.Entity.OrderDetailEntity;
-import com.swp391.webapp.Entity.ServiceEntity;
-import com.swp391.webapp.Repository.FeedbackRepository;
-import com.swp391.webapp.Repository.OrderRepository;
-import com.swp391.webapp.Repository.PackageRepository;
-import com.swp391.webapp.Repository.ServiceRepository;
+import com.swp391.webapp.Entity.*;
+import com.swp391.webapp.Repository.*;
 import com.swp391.webapp.dto.FeedbackDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +26,8 @@ public class FeedbackService {
     private Order_DetailService orderDetailService;
     @Autowired
     private AccountUtils accountUtils;
+    @Autowired
+    private AccountRepository accountRepository;
 
     // ServiceDTO methods for Feedback entity
 
@@ -44,27 +40,19 @@ public class FeedbackService {
     }
 
     public FeedbackDTO saveFeedback(int orderId, FeedbackDTO feedbackDTO) {
-
         LocalDate date = LocalDate.now();
         //Lay order
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
-        //Lay danh sach order detail
-        List<OrderDetailEntity> orderDetailEntityList = orderDetailService.getAllServiceDetailsByOrderId(orderEntity.getOrderID());
-        //Lay danh sach service
-        List<ServiceEntity> listService = new ArrayList<>();
-        for (int i = 0; i < orderDetailEntityList.size(); i++) {
-            ServiceEntity serviceEntity = serviceRepository.findById(orderDetailEntityList.get(i).getService().getServiceID()).get();
-            listService.add(serviceEntity);
-        }
-        for (int i = 0; i < listService.size(); i++) {
-            FeedbackEntity feedback = new FeedbackEntity();
-            feedback.setFeedbackDate(date);
-            feedback.setService(listService.get(i));
-            feedback.setAccount(accountUtils.getCurrentAccount());
-            feedback.setRating(feedbackDTO.getRating());
-            feedback.setDescription(feedbackDTO.getDescription());
-            feedbackRepository.save(feedback);
-        }
+
+        //Tao feedback
+        FeedbackEntity feedback = new FeedbackEntity();
+        feedback.setFeedbackDate(date);
+        feedback.setGuest(orderEntity.getAccount());
+        feedback.setHost(orderEntity.getPackageEntity().getAccount());
+        feedback.setRating(feedbackDTO.getRating());
+        feedback.setDescription(feedbackDTO.getDescription());
+        feedbackRepository.save(feedback);
+
         return feedbackDTO;
     }
 
@@ -72,12 +60,10 @@ public class FeedbackService {
         feedbackRepository.deleteById(feedbackId);
     }
 
-    public List<FeedbackEntity> getFeedbacksByService(int serviceId) {
-        ServiceEntity serviceEntity = serviceRepository.findById(serviceId).get();
-        return feedbackRepository.findFeedbacksByService(serviceEntity);
+    public List<FeedbackEntity> getFeedbacksByHost(int hostId) {
+        AccountEntity host = accountRepository.findById(hostId).get();
+        return feedbackRepository.findFeedbacksByHost(host);
     }
-
-
 
 
     // Additional service methods if needed

@@ -104,14 +104,14 @@ public class OrderService {
 
         //Tru tien trong tai khoan admin
         WalletEntity adminWallet = walletService.getWalletById(1).get();
-        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getTotalPrice().longValue());
+        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getDepositedMoney().longValue());
         adminWallet.setTotalMoney(total);
         walletService.saveWallet(adminWallet);
 
         //Them tien vao tai khoan guest
         AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
         WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
-        total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
         guestWallet.setTotalMoney(total);
         return walletService.saveWallet(guestWallet);
     }
@@ -120,8 +120,6 @@ public class OrderService {
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
         orderEntity.setStatus(OrderStatus.ACCEPTED);
         orderRepository.save(orderEntity);
-        System.out.println("đã accept");
-
         return orderEntity;
     }
 
@@ -130,16 +128,20 @@ public class OrderService {
         orderEntity.setStatus(OrderStatus.DONE);
         orderRepository.save(orderEntity);
 
-        //Tru tien trong tai khoan admin
+        //Tinh tien
+        BigDecimal adminKeep = new BigDecimal(orderEntity.getDepositedMoney().longValue() * 20 / 100); //20% tong gia tri order
+        BigDecimal hostKeep = new BigDecimal(orderEntity.getDepositedMoney().longValue() - adminKeep.longValue()); //80% tong gia tri order
+
+        //Tru tien trong tai khoan admin, giu lai 20%
         WalletEntity adminWallet = walletService.getWalletById(1).get();
-        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getTotalPrice().longValue());
-        adminWallet.setTotalMoney(total);
+        BigDecimal totalInWallet = new BigDecimal(adminWallet.getTotalMoney().longValue() - hostKeep.longValue());
+        adminWallet.setTotalMoney(totalInWallet);
         walletService.saveWallet(adminWallet);
 
         //Them tien vao tai khoan host
         AccountEntity hostAccount = accountService.getAccountById(orderEntity.getPackageEntity().getAccount().getAccountID()).get();
         WalletEntity hostWallet = walletService.getWalletById(hostAccount.getAccountID()).get();
-        total = new BigDecimal(hostWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        totalInWallet = new BigDecimal(hostWallet.getTotalMoney().longValue() + hostKeep.longValue());
         return walletService.saveWallet(hostWallet);
     }
 
@@ -149,14 +151,14 @@ public class OrderService {
 
         //Tru tien trong tai khoan admin
         WalletEntity adminWallet = walletService.getWalletById(1).get();
-        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getTotalPrice().longValue());
+        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getDepositedMoney().longValue());
         adminWallet.setTotalMoney(total);
         walletService.saveWallet(adminWallet);
 
         //Them tien vao tai khoan guest
         AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
         WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
-        total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
         return walletService.saveWallet(guestWallet);
     }
 

@@ -23,9 +23,9 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackEntities);
     }
 
-    @GetMapping("/service/{serviceId}")
-    public ResponseEntity<List<FeedbackEntity>> getFeedbacksByService(@PathVariable int serviceId) {
-        List<FeedbackEntity> feedbackEntities = feedbackService.getFeedbacksByService(serviceId);
+    @GetMapping("/host/{hostId}")
+    public ResponseEntity<List<FeedbackEntity>> getFeedbacksByService(@PathVariable int hostId) {
+        List<FeedbackEntity> feedbackEntities = feedbackService.getFeedbacksByHost(hostId);
         return ResponseEntity.ok(feedbackEntities);
     }
 

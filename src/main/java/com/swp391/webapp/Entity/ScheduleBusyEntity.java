@@ -9,31 +9,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-@Table(name = "schedule")
-public class Schedule {
+@Table(name = "schedule_busy")
+public class ScheduleBusyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "schedule_ID")
+    @Column(name = "schedule_busy_ID")
     private Integer id;
+
+    @Column(name = "date")
+    @JsonFormat(pattern="MM-dd-yyyy")
+    private Date date;
 
     @ManyToOne
     @JoinColumn(name = "account_ID", nullable = false)
     @JsonIgnore
     private AccountEntity account;
 
-    @Column(name = "time")
-    @JsonFormat(pattern="HH:mm:ss")
-    private Time time;
-
-    // Constructors, getters, setters, etc.
+    @Column(name = "busy")
+    private boolean busy = true;
 }
-

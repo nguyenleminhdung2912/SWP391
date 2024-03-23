@@ -2,7 +2,8 @@ package com.swp391.webapp.Service;
 
 import com.swp391.webapp.Entity.Schedule;
 import com.swp391.webapp.Repository.ScheduleRepository;
-import com.swp391.webapp.dto.ScheduleRequestDTO;
+import com.swp391.webapp.dto.ScheduleBusyRequestDTO;
+import com.swp391.webapp.dto.ScheduleWorikingRequestDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,12 +37,10 @@ public class ScheduleService {
         return scheduleRepository.save(schedule);
     }
 
-    public Schedule saveSchedule(ScheduleRequestDTO scheduleDTO) {
+    public Schedule saveSchedule(ScheduleWorikingRequestDTO scheduleDTO) {
         Schedule schedule = new Schedule();
-        schedule.setDate(scheduleDTO.getDate());
         schedule.setTime(scheduleDTO.getTime());
         schedule.setAccount(accountUtils.getCurrentAccount());
-        schedule.setBusy(schedule.isBusy());
         return scheduleRepository.save(schedule);
     }
 
@@ -49,12 +48,10 @@ public class ScheduleService {
         scheduleRepository.deleteById(scheduleId);
     }
 
-    public Schedule updateSchedule(int id, ScheduleRequestDTO scheduleRequestDTO) {
+    public Schedule updateSchedule(int id, ScheduleWorikingRequestDTO scheduleBusyRequestDTO) {
         Schedule schedule = scheduleRepository.findById(id).get();
-        schedule.setDate(scheduleRequestDTO.getDate());
-        schedule.setTime(scheduleRequestDTO.getTime());
+        schedule.setTime(scheduleBusyRequestDTO.getTime());
         schedule.setAccount(accountUtils.getCurrentAccount());
-        schedule.setBusy(scheduleRequestDTO.isBusy());
         return scheduleRepository.save(schedule);
     }
 

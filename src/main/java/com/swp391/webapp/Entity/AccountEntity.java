@@ -95,5 +95,6 @@ public class AccountEntity implements UserDetails {
     @JsonIgnore
     List<Schedule> schedules;
 
+
     // Constructors, getters, setters, etc.
 }

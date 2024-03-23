@@ -7,19 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ScheduleRequestDTO {
+public class ScheduleBusyRequestDTO {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private Date date;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="HH:mm")
-    private Time time;
 
     private boolean busy = false;
 }

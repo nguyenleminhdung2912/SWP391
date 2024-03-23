@@ -76,9 +76,8 @@ public class WalletService {
 
     //Chuyen tien vao wallet cua admin
     public void guestPayForOrder(OrderEntity orderEntity){
-        //Tru tien trong tai khoan admin
         WalletEntity adminWallet = walletRepository.findById(1).get();
-        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() + orderEntity.getTotalPrice().longValue());
+        BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
         adminWallet.setTotalMoney(total);
         walletRepository.save(adminWallet);
     }

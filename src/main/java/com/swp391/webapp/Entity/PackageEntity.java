@@ -29,6 +29,11 @@ public class PackageEntity {
     @Column(nullable = false)
     private BigDecimal price;
 
+    @Column
+    private Integer maximumSlot;
+
+    @Column
+    private BigDecimal moneyPerSlot;
 
     @Column
     private String description;
@@ -39,9 +44,10 @@ public class PackageEntity {
     @Column
     private boolean isDeleted = false;
 
-    public PackageEntity(AccountEntity account, String name, BigDecimal price, String description, String picture) {
+    public PackageEntity(AccountEntity account, String name, Integer maximumSlot,  BigDecimal price, String description, String picture) {
         this.account = account;
         this.name = name;
+        this.maximumSlot = maximumSlot;
         this.price = price;
         this.description = description;
         this.picture = picture;

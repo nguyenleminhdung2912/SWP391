@@ -54,7 +54,7 @@ public class PackageService {
         if (account.getStatus().equals("Inactivated")) {
             throw new RuntimeException("This account has not been activated. Please activate before adding packages");
         } else {
-            PackageEntity packageEntity = new PackageEntity(accountUtils.getCurrentAccount(), aPackageDTO.getName(), aPackageDTO.getPrice(), aPackageDTO.getDescription(), aPackageDTO.getPicture());
+            PackageEntity packageEntity = new PackageEntity(accountUtils.getCurrentAccount(), aPackageDTO.getName(), aPackageDTO.getSlot(), aPackageDTO.getPrice(), aPackageDTO.getDescription(), aPackageDTO.getPicture());
             return packageRepository.save(packageEntity);
         }
     }
@@ -86,12 +86,15 @@ public class PackageService {
         PackageEntity current = packageRepository.findById(id).get();
         if (!(aPackageDTO.getName() == null))
             current.setName(aPackageDTO.getName());
+        if (!(aPackageDTO.getSlot() == null))
+            current.setMaximumSlot(aPackageDTO.getSlot());
         if (!(aPackageDTO.getPrice() == null))
             current.setPrice(aPackageDTO.getPrice());
         if (!(aPackageDTO.getPicture() == null))
             current.setPicture(aPackageDTO.getPicture());
         if (!(aPackageDTO.getDescription() == null))
             current.setDescription(aPackageDTO.getDescription());
+
         return packageRepository.save(current);
     }
 
