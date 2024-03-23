@@ -25,14 +25,14 @@ public class MailController {
     @GetMapping("/test/sendMail")
     public void sendMail(AccountEntity accountEntity){
         try {
-//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-//            emailDetail.setRecipient(account.get().getEmail());
-//            emailDetail.setName(accountEntity.getName());
-            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("test123");
             emailDetail.setMsgBody("Test send vertify mail");
-            emailDetail.setName("Minh Dung");
+//            emailDetail.setName("Minh Dung");
             emailService.sendMailTemplate(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
@@ -41,14 +41,14 @@ public class MailController {
     @GetMapping("/test/sendHostCongrats")
     public void sendHostCongrats(AccountEntity accountEntity) {
         try {
-//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-//            emailDetail.setRecipient(account.get().getEmail());
-//            emailDetail.setName(accountEntity.getName());
-            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("Congratulation!");
             emailDetail.setMsgBody("Your account has been verified!");
-            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setName(accountEntity.getName());
             emailService.sendCongratsHostTemplate(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
@@ -57,14 +57,14 @@ public class MailController {
     @GetMapping("/test/sendHostGuestHasCancelled")
     public void sendHostGuestHasCancelled(AccountEntity accountEntity) {
         try {
-//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-//            emailDetail.setRecipient(account.get().getEmail());
-//            emailDetail.setName(accountEntity.getName());
-            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("Congratulation!");
             emailDetail.setMsgBody("Your account has been verified!");
-            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setName(accountEntity.getName());
             emailService.sendHostGuestHasCancelled(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
@@ -73,14 +73,14 @@ public class MailController {
     @GetMapping("/test/sendGuestBookingInformation")
     public void sendGuestBookingInformation(AccountEntity accountEntity) {
         try {
-//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-//            emailDetail.setRecipient(account.get().getEmail());
-//            emailDetail.setName(accountEntity.getName());
-            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("Congratulation!");
             emailDetail.setMsgBody("Your account has been verified!");
-            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setName(accountEntity.getName());
             emailService.sendGuestBookingInformation(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
@@ -89,14 +89,14 @@ public class MailController {
     @GetMapping("/test/sendGuestHostHasRefusedOrder")
     public void sendGuestHostHasRefusedOrder(AccountEntity accountEntity) {
         try {
-//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-//            emailDetail.setRecipient(account.get().getEmail());
-//            emailDetail.setName(accountEntity.getName());
-            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("Congratulation!");
             emailDetail.setMsgBody("Your account has been verified!");
-            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setName(accountEntity.getName());
             emailService.sendGuestHostHasRefusedOrder(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();
@@ -106,14 +106,14 @@ public class MailController {
     @GetMapping("/test/sendGuestHostHasAcceptOrder")
     public void sendGuestHostHasAcceptOrder(AccountEntity accountEntity) {
         try {
-//            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-//            emailDetail.setRecipient(account.get().getEmail());
-//            emailDetail.setName(accountEntity.getName());
-            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
             emailDetail.setSubject("Congratulation!");
             emailDetail.setMsgBody("Your account has been verified!");
-            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setName(accountEntity.getName());
             emailService.sendGuestHostHasAcceptOrder(emailDetail);
         }catch (Exception e) {
             e.printStackTrace();

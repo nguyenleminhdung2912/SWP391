@@ -23,8 +23,8 @@ public class EmailService {
         try{
             Context context = new Context();
 
-//            context.setVariable("name", emailDetail.getName());
-            context.setVariable("name", "Minh Dung");
+            context.setVariable("name", emailDetail.getName());
+//            context.setVariable("name", "Minh Dung");
 
 //            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
             String link = "http://localhost:5173/login";
@@ -76,8 +76,8 @@ public class EmailService {
         try{
             Context context = new Context();
 
-//            context.setVariable("name", emailDetail.getName());
-            context.setVariable("name", "Minh Dung");
+            context.setVariable("name", emailDetail.getName());
+//            context.setVariable("name", "Minh Dung");
 
 //            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
             String link = "http://birthdayblitzhub.online/";
@@ -106,8 +106,8 @@ public class EmailService {
         try{
             Context context = new Context();
 
-//            context.setVariable("name", emailDetail.getName());
-            context.setVariable("name", "Minh Dung");
+            context.setVariable("name", emailDetail.getName());
+//            context.setVariable("name", "Minh Dung");
 
 //            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
             String link = "http://birthdayblitzhub.online/";
@@ -136,8 +136,8 @@ public class EmailService {
         try{
             Context context = new Context();
 
-//            context.setVariable("name", emailDetail.getName());
-            context.setVariable("name", "Minh Dung");
+            context.setVariable("name", emailDetail.getName());
+//            context.setVariable("name", "Minh Dung");
 
 //            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
             String link = "http://birthdayblitzhub.online/";
@@ -165,8 +165,8 @@ public class EmailService {
         try{
             Context context = new Context();
 
-//            context.setVariable("name", emailDetail.getName());
-            context.setVariable("name", "Minh Dung");
+            context.setVariable("name", emailDetail.getName());
+//            context.setVariable("name", "Minh Dung");
 
 //            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
             String link = "http://birthdayblitzhub.online/";
