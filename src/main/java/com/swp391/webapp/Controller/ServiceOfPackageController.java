@@ -26,7 +26,7 @@ public class ServiceOfPackageController {
 
     @PostMapping("{packageId}")
     public ResponseEntity<ServiceOfPackageEntity> saveService(@RequestBody ServiceDTO serviceDTO, @PathVariable int packageId) {
-        ServiceOfPackageEntity savedService = serviceService.saveService(serviceDTO, packageId);
+        ServiceOfPackageEntity savedService = serviceService.saveServiceToPackage(serviceDTO, packageId);
         return ResponseEntity.ok(savedService);
     }
     @GetMapping

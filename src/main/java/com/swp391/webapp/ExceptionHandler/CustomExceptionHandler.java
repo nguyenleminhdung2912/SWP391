@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.io.NotActiveException;
+
 @RestControllerAdvice
 public class CustomExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
@@ -19,4 +21,6 @@ public class CustomExceptionHandler {
     public ErrorResponse handlerAlreadyExistedException(AlreadyExistedException ex, WebRequest req) {
         return new ErrorResponse(HttpStatus.ALREADY_REPORTED, ex.getMessage());
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.swp391.webapp.Controller;
 import com.swp391.webapp.Entity.FeedbackEntity;
 import com.swp391.webapp.Service.FeedbackService;
 import com.swp391.webapp.dto.FeedbackDTO;
+import com.swp391.webapp.dto.FeedbackForPackageDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,20 @@ public class FeedbackController {
         return ResponseEntity.ok(feedbackEntities);
     }
 
+    @GetMapping("/packageAverageRating/{packageId}")
+    public FeedbackForPackageDTO getAverageFeedbacksByPackage(@PathVariable int packageId) {
+        FeedbackForPackageDTO feedback = feedbackService.getAverageFeedbacksForPackageDetail(packageId);
+        return feedback;
+    }
+
+    @GetMapping("/package/{packageId}")
+    public List<FeedbackEntity> getFeedbacksByPackage(@PathVariable int packageId) {
+        List<FeedbackEntity> feedbackList = feedbackService.getFeedbacksForPackageDetail(packageId);
+        return feedbackList;
+    }
+
     @GetMapping("/host/{hostId}")
-    public ResponseEntity<List<FeedbackEntity>> getFeedbacksByService(@PathVariable int hostId) {
+    public ResponseEntity<List<FeedbackEntity>> getFeedbacksByHost(@PathVariable int hostId) {
         List<FeedbackEntity> feedbackEntities = feedbackService.getFeedbacksByHost(hostId);
         return ResponseEntity.ok(feedbackEntities);
     }

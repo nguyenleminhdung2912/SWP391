@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -54,7 +55,8 @@ public class PackageService {
         if (account.getStatus().equals("Inactivated")) {
             throw new RuntimeException("This account has not been activated. Please activate before adding packages");
         } else {
-            PackageEntity packageEntity = new PackageEntity(accountUtils.getCurrentAccount(), aPackageDTO.getName(), aPackageDTO.getSlot(), aPackageDTO.getPrice(), aPackageDTO.getDescription(), aPackageDTO.getPicture());
+            PackageEntity packageEntity = new PackageEntity(accountUtils.getCurrentAccount(), aPackageDTO.getName(), aPackageDTO.getSlot(), aPackageDTO.getDiscountPercentage(), aPackageDTO.getDescription(), aPackageDTO.getPicture());
+            packageEntity.setPrice(new BigDecimal(0));
             return packageRepository.save(packageEntity);
         }
     }
@@ -88,13 +90,18 @@ public class PackageService {
             current.setName(aPackageDTO.getName());
         if (!(aPackageDTO.getSlot() == null))
             current.setMaximumSlot(aPackageDTO.getSlot());
-        if (!(aPackageDTO.getPrice() == null))
-            current.setPrice(aPackageDTO.getPrice());
-        if (!(aPackageDTO.getPicture() == null))
+        if (!(aPackageDTO.getDiscountPercentage() == 0))
+        {
+            //set lai discount %
+            current.setDiscountPercentage(aPackageDTO.getDiscountPercentage());
+            //Set lai gia tien da discount
+            BigDecimal newDiscountPrice = BigDecimal.valueOf(current.getPrice().longValue() - (current.getPrice().longValue() * current.getDiscountPercentage()) / 100);
+            current.setDiscountedPrice(newDiscountPrice);
+        }
+        if (!aPackageDTO.getPicture().isEmpty() || !aPackageDTO.getPicture().isBlank())
             current.setPicture(aPackageDTO.getPicture());
         if (!(aPackageDTO.getDescription() == null))
             current.setDescription(aPackageDTO.getDescription());
-
         return packageRepository.save(current);
     }
 

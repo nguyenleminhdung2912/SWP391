@@ -26,14 +26,20 @@ public class PackageEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private BigDecimal price;
+
+    @Column(nullable = true)
+    private BigDecimal discountedPrice;
+
+    @Column(nullable = false)
+    private float discountPercentage;
 
     @Column
     private Integer maximumSlot;
 
-    @Column
-    private BigDecimal moneyPerSlot;
+//    @Column
+//    private BigDecimal moneyPerSlot;
 
     @Column
     private String description;
@@ -44,11 +50,13 @@ public class PackageEntity {
     @Column
     private boolean isDeleted = false;
 
-    public PackageEntity(AccountEntity account, String name, Integer maximumSlot,  BigDecimal price, String description, String picture) {
+    public PackageEntity(AccountEntity account, String name, Integer maximumSlot,  float discountPercentage, String description, String picture) {
         this.account = account;
         this.name = name;
         this.maximumSlot = maximumSlot;
-        this.price = price;
+        this.discountPercentage = discountPercentage;
+        this.price = new BigDecimal(0);
+        this.discountedPrice = new BigDecimal(0);
         this.description = description;
         this.picture = picture;
     }
@@ -56,8 +64,5 @@ public class PackageEntity {
     @OneToMany(mappedBy = "packageEntity", cascade = CascadeType.ALL)
     @JsonIgnore
     List<ServiceOfPackageEntity> serviceOfPackageEntities;
-    // Constructors, getters, setters, etc.
-
-    // Constructors, getters, setters, etc.
 }
 

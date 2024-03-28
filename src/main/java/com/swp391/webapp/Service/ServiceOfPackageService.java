@@ -1,5 +1,7 @@
 package com.swp391.webapp.Service;
 
+import com.swp391.webapp.Entity.PackageEntity;
+import com.swp391.webapp.Entity.ServiceEntity;
 import com.swp391.webapp.Entity.ServiceOfPackageEntity;
 import com.swp391.webapp.Repository.ServiceOfPackageRepository;
 import com.swp391.webapp.Repository.ServiceRepository;
@@ -37,6 +39,14 @@ public class ServiceOfPackageService {
 
     public void deleteServiceOfPackage(int serviceOfPackageId) {
         serviceOfPackageRepository.deleteById(serviceOfPackageId);
+    }
+
+    public List<ServiceOfPackageEntity> getAllServiceOfPackageByService(ServiceEntity serviceEntity) {
+        return serviceOfPackageRepository.findServiceOfPackageEntitiesByService(serviceEntity);
+    }
+
+    public List<ServiceOfPackageEntity> getAllServiceOfPackageByServiceAndPackage(ServiceEntity serviceEntity, PackageEntity packageEntity) {
+        return serviceOfPackageRepository.findServiceOfPackageEntitiesByServiceAndPackageEntity(serviceEntity, packageEntity);
     }
 
     // Additional service methods if needed

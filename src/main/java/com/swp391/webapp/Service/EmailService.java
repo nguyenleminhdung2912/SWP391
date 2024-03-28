@@ -27,7 +27,7 @@ public class EmailService {
 //            context.setVariable("name", "Minh Dung");
 
 //            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
-            String link = "http://localhost:5173/login";
+            String link = "http://birthdayblitzhub.online:8080/auth/verify/" + emailDetail.getRecipient();
 
             context.setVariable("link", link);
 
@@ -55,7 +55,11 @@ public class EmailService {
 
             context.setVariable("name", emailDetail.getName());
 
-            String text = templateEngine.process("emailtemplate2", context);
+            String link = "http://birthdayblitzhub.online/login";
+
+            context.setVariable("link", link);
+
+            String text = templateEngine.process("BookingSuccessful", context);
 
             // Creating a simple mail message
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -131,6 +135,37 @@ public class EmailService {
             messagingException.printStackTrace();
         }
     }
+
+    public void sendHostThereIsNewOrder(EmailDetail emailDetail) {
+        try{
+            Context context = new Context();
+
+            context.setVariable("name", emailDetail.getName());
+//            context.setVariable("name", "Minh Dung");
+
+//            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
+            String link = "http://birthdayblitzhub.online/";
+
+            context.setVariable("link", link);
+
+
+            String text = templateEngine.process("NotifyOrderToHost", context);
+
+            // Creating a simple mail message
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+
+            // Setting up necessary details
+            mimeMessageHelper.setFrom("admin@gmail.com");
+            mimeMessageHelper.setTo(emailDetail.getRecipient());
+            mimeMessageHelper.setText(text, true);
+            mimeMessageHelper.setSubject(emailDetail.getSubject());
+            javaMailSender.send(mimeMessage);
+        }catch (MessagingException messagingException){
+            messagingException.printStackTrace();
+        }
+    }
+
 
     public void sendGuestHostHasRefusedOrder(EmailDetail emailDetail) {
         try{

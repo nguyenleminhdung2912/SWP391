@@ -6,12 +6,14 @@ import com.swp391.webapp.Entity.WalletEntity;
 import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Service.AccountService;
+import com.swp391.webapp.Service.EmailService;
 import com.swp391.webapp.Service.JWTService;
 import com.swp391.webapp.Service.WalletService;
 import com.swp391.webapp.dto.AccountUpdate;
 import com.swp391.webapp.dto.LoginRequestDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,9 +42,9 @@ public class LoginController implements SecuredRestController {
     @Autowired
     private WalletService walletService;
     @Autowired
-    AccountUtils accountUtils;
+    private AccountUtils accountUtils;
     @Autowired
-    MailController mailController = new MailController();
+    private MailController mailController = new MailController();
     @Autowired
     private PackageRepository packageRepository;
 
@@ -53,6 +56,10 @@ public class LoginController implements SecuredRestController {
 
     @PostMapping("/login")
     public AccountEntity login(@RequestBody LoginRequestDTO loginRequestDTO)  {
+        AccountEntity accountEntity = accountService.loadUserByUsername(loginRequestDTO.getEmail());
+        if (accountEntity.getStatus().equals("Inactivated")) {
+            throw new VerifyError("This account has not been verified");
+        }
         Authentication authentication = null;
         try{
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
@@ -127,12 +134,15 @@ public class LoginController implements SecuredRestController {
         return ResponseEntity.ok(accountUtils.getCurrentAccount());
     }
 
-    @PostMapping("/verify/{email}")
-    public ResponseEntity activateHostAccount(@PathVariable String email) {
+    @GetMapping("/verify/{email}")
+    public ResponseEntity<Void> activateHostAccount(@PathVariable String email) {
         AccountEntity accountEntity = accountService.loadUserByUsername(email);
         accountEntity.setStatus("Activated");
-        mailController.sendHostCongrats(accountEntity);
-        return ResponseEntity.ok(accountService.saveAccount(accountEntity));
+        if (accountEntity.getRole().equals("Host")) {
+            mailController.sendMail(accountEntity);
+        }
+        accountService.saveAccountStatus(accountEntity);
+        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("http://birthdayblitzhub.online/login")).build();
     }
 
     @PatchMapping("/{id}")

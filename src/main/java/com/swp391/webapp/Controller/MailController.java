@@ -25,13 +25,12 @@ public class MailController {
     @GetMapping("/test/sendMail")
     public void sendMail(AccountEntity accountEntity){
         try {
-            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
             EmailDetail emailDetail = new EmailDetail();
-            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setRecipient(accountEntity.getEmail());
             emailDetail.setName(accountEntity.getName());
 //            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
-            emailDetail.setSubject("test123");
-            emailDetail.setMsgBody("Test send vertify mail");
+            emailDetail.setSubject("Verify account");
+            emailDetail.setMsgBody("Please verify your account");
 //            emailDetail.setName("Minh Dung");
             emailService.sendMailTemplate(emailDetail);
         }catch (Exception e) {

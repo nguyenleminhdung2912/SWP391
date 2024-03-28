@@ -3,6 +3,7 @@ package com.swp391.webapp.Service;
 import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Repository.*;
 import com.swp391.webapp.dto.FeedbackDTO;
+import com.swp391.webapp.dto.FeedbackForPackageDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,7 @@ public class FeedbackService {
         feedback.setFeedbackDate(date);
         feedback.setGuest(orderEntity.getAccount());
         feedback.setHost(orderEntity.getPackageEntity().getAccount());
+        feedback.setAPackage(orderEntity.getPackageEntity());
         feedback.setRating(feedbackDTO.getRating());
         feedback.setDescription(feedbackDTO.getDescription());
         feedbackRepository.save(feedback);
@@ -63,6 +65,25 @@ public class FeedbackService {
     public List<FeedbackEntity> getFeedbacksByHost(int hostId) {
         AccountEntity host = accountRepository.findById(hostId).get();
         return feedbackRepository.findFeedbacksByHost(host);
+    }
+
+    public FeedbackForPackageDTO getAverageFeedbacksForPackageDetail(int packageId) {
+        PackageEntity packageEntity = packageRepository.findById(packageId).get();
+        List<FeedbackEntity> feedbackEntityList = feedbackRepository.findFeedbacksByaPackage(packageEntity);
+        float averageRating = 0;
+        int numberOfFeedback = 0;
+        for (FeedbackEntity feedback : feedbackEntityList) {
+            numberOfFeedback++;
+            averageRating += feedback.getRating();
+        }
+        averageRating = averageRating/numberOfFeedback;
+        return new FeedbackForPackageDTO(averageRating, numberOfFeedback);
+    }
+
+    public List<FeedbackEntity> getFeedbacksForPackageDetail(int packageId) {
+        PackageEntity packageEntity = packageRepository.findById(packageId).get();
+        List<FeedbackEntity> feedbackEntityList = feedbackRepository.findFeedbacksByaPackage(packageEntity);
+        return feedbackEntityList;
     }
 
 

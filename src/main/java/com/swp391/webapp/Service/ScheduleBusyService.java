@@ -46,7 +46,7 @@ public class ScheduleBusyService {
 
     public ScheduleBusyEntity updateBusySchedule(int id, ScheduleBusyRequestDTO scheduleBusyRequestDTO) {
         ScheduleBusyEntity current = scheduleBusyRepository.findById(id).get();
-
+        current.setDate(scheduleBusyRequestDTO.getDate());
         return scheduleBusyRepository.save(current);
     }
 

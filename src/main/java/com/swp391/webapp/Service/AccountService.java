@@ -34,6 +34,10 @@ public class AccountService implements UserDetailsService {
         return accountRepository.save(accountEntity);
     }
 
+    public AccountEntity saveAccountStatus(AccountEntity accountEntity) {
+        return accountRepository.save(accountEntity);
+    }
+
     public List<AccountEntity> getAllAcounts() {
         return accountRepository.findAccountsByIsDeleted(0);
     }

@@ -16,4 +16,5 @@ public class ApiHanleException {
     public ResponseEntity<?> alreadyExist(Exception exception) {
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 }

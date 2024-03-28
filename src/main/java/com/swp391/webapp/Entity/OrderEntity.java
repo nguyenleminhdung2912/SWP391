@@ -1,5 +1,6 @@
 package com.swp391.webapp.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swp391.webapp.Entity.Enum.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,9 +38,6 @@ public class OrderEntity {
     @Column(nullable = false)
     private int quantity;
 
-    @Column(nullable = true)
-    private int slots;
-
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
@@ -67,6 +65,12 @@ public class OrderEntity {
     @Column(nullable = true)
     private String customerEmail;
 
+    @Column(nullable = true)
+    private String notes;
+
+    @Column(nullable = false)
+    @JsonFormat(pattern="MM-dd-yyyy")
+    private java.util.Date date;
     // Constructors, getters, setters, etc.
 }
 

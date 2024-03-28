@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 public class PackageDTO {
     String name;
     Integer slot;
-    BigDecimal price;
+    float discountPercentage = 0;
     String description;
     String picture;
 }

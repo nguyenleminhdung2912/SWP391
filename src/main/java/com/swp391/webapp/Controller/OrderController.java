@@ -4,7 +4,7 @@ import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Entity.Enum.OrderStatus;
 import com.swp391.webapp.Repository.OrderRepository;
 import com.swp391.webapp.Repository.PackageRepository;
-import com.swp391.webapp.Repository.ScheduleRepository;
+import com.swp391.webapp.Repository.ScheduleWorkingRepository;
 import com.swp391.webapp.Service.*;
 import com.swp391.webapp.dto.OrderDTO;
 import com.swp391.webapp.utils.AccountUtils;
@@ -31,9 +31,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    private ScheduleWorkingRepository scheduleWorkingRepository;
     @Autowired
-    private ScheduleService scheduleService;
+    private ScheduleWorkingService scheduleWorkingService;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -46,6 +46,8 @@ public class OrderController {
     private TransactionService transactionService;
     @Autowired
     private AccountUtils accountUtils;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     public ResponseEntity<List<OrderEntity>> getAllOrders() {
@@ -88,11 +90,12 @@ public class OrderController {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
         LocalDateTime createDate = LocalDateTime.now();
+        Date createdate = new Date();
         String formattedCreateDate = createDate.format(formatter);
         //Lấy thời gian đặt lịch
-        Schedule schedule = scheduleService.findScheduleByID(orderDTO.getScheduleId());
+        Schedule schedule = scheduleWorkingService.findScheduleByID(orderDTO.getScheduleId());
 //        schedule.setBusy(true);
-        scheduleService.save(schedule);
+        scheduleWorkingService.save(schedule);
         OrderEntity ordered = new OrderEntity();
         //Tạo thời gian đặt order
         ordered.setCreateAt(new Date());
@@ -109,23 +112,26 @@ public class OrderController {
         ordered.setStatus(OrderStatus.ORDERED);
         ordered.setTotalPrice(BigDecimal.valueOf(orderDTO.getTotalPrice()));
         ordered.setQuantity(quantity+1);
-        ordered.setSlots(orderDTO.getSlots());
+        ordered.setNotes(orderDTO.getNotes());
         ordered.setPhone(orderDTO.getPhoneNumber());
+        ordered.setCreateAt(createdate);
         ordered.setCustomerName(orderDTO.getUsername());
+        ordered.setDate(orderDTO.getDate());
         ordered.setDepositedMoney(BigDecimal.valueOf(depositMoney));
         ordered.setRemainingMoney(BigDecimal.valueOf(orderDTO.getTotalPrice() - depositMoney));
         ordered.setVenue(orderDTO.getVenue());
         ordered.setCustomerEmail(orderDTO.getEmail());
 
-
-
+        //Luu order voi Status = ORDERED
         OrderEntity newOrder = orderService.createOrder(ordered, orderDTO.getOrderDetailDTOList());
+
+        //Kiem tra so du trong vi cua nguoi dung
+        //Neu du tien thi thanh toan = vi, neu khong thi qua VNPay
 
         String tmnCode = "II9036T8";
         String secretKey = "AFWMAKAMRNPUQTQWFDCGXTXPQBQKFIRF";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         String returnUrl = "http://localhost:5173/success";
-        String returnfailUrl = "http://localhost:5173/fail";
 
         String currCode = "VND";
         Map<String, String> vnpParams = new TreeMap<>();
@@ -187,6 +193,17 @@ public class OrderController {
         TransactionEntity transaction = new TransactionEntity(ordered, guestWallet, ordered.getCreateAt(), ordered.getDepositedMoney());
         transactionService.saveTransaction(transaction);
 
+        //Gui mail cho khach hang thong bao rang order da duoc dat
+        AccountEntity hostAccount = ordered.getPackageEntity().getAccount();
+        EmailDetail emailDetail = new EmailDetail();
+        emailDetail.setRecipient(hostAccount.getEmail());
+        emailDetail.setName(hostAccount.getName());
+        emailDetail.setSubject("Congratulation!");
+        emailDetail.setMsgBody("There is a new order!");
+        emailService.sendGuestBookingInformation(emailDetail);
+
+        //Gui mail cho host bao la da co 1 don hang moi
+
         return orderService.saveOrder(ordered);
     }
 
@@ -211,6 +228,66 @@ public class OrderController {
 //    public List<OrderEntity> getcancelledOrder(){
 //        return orderService.getCancelOrder();
 //    }
+
+    @PostMapping("/pay-ordered-payment/{orderId}")
+    public ResponseEntity payForOrderedOrderURL(@PathVariable int orderId) throws NoSuchAlgorithmException, InvalidKeyException, Exception {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        LocalDateTime createDate = LocalDateTime.now();
+        String formattedCreateDate = createDate.format(formatter);
+
+        OrderEntity newOrder = orderService.findOrderById(orderId);
+
+        long depositMoney = newOrder.getTotalPrice().longValue() * 40 / 100;
+
+        //Kiem tra so du trong vi cua nguoi dung
+        //Neu du tien thi thanh toan = vi, neu khong thi qua VNPay
+
+        String tmnCode = "II9036T8";
+        String secretKey = "AFWMAKAMRNPUQTQWFDCGXTXPQBQKFIRF";
+        String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+        String returnUrl = "http://localhost:5173/success";
+
+        String currCode = "VND";
+        Map<String, String> vnpParams = new TreeMap<>();
+        vnpParams.put("vnp_Version", "2.1.0");
+        vnpParams.put("vnp_Command", "pay");
+        vnpParams.put("vnp_TmnCode", tmnCode);
+        vnpParams.put("vnp_Locale", "vn");
+        vnpParams.put("vnp_CurrCode", currCode);
+        vnpParams.put("vnp_TxnRef", newOrder.getOrderID()+"");
+        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + newOrder.getOrderID()+"");
+        vnpParams.put("vnp_OrderType", "other");
+        vnpParams.put("vnp_Amount", String.valueOf(100 * depositMoney));
+        vnpParams.put("vnp_ReturnUrl", returnUrl);
+        vnpParams.put("vnp_CreateDate", formattedCreateDate);
+        vnpParams.put("vnp_IpAddr", "http://birthdayblitzhub.online/");
+
+        StringBuilder signDataBuilder = new StringBuilder();
+        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {
+            signDataBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+            signDataBuilder.append("=");
+            signDataBuilder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
+            signDataBuilder.append("&");
+        }
+        signDataBuilder.deleteCharAt(signDataBuilder.length() - 1); // Remove last '&'
+
+        String signData = signDataBuilder.toString();
+        String signed = generateHMAC(secretKey, signData);
+
+        vnpParams.put("vnp_SecureHash", signed);
+
+        StringBuilder urlBuilder = new StringBuilder(vnpUrl);
+        urlBuilder.append("?");
+        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {urlBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+            urlBuilder.append("=");
+            urlBuilder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
+            urlBuilder.append("&");
+        }
+        urlBuilder.deleteCharAt(urlBuilder.length() - 1); // Remove last '&'
+
+        return ResponseEntity.ok(urlBuilder.toString());
+    }
 
     @PostMapping("/host/refuse-order/{orderId}")
     public void refuseOrder(@PathVariable int orderId){

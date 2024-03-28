@@ -56,9 +56,14 @@ public class ServiceController implements SecuredRestController {
         return ResponseEntity.ok(services);
     }
 
-    @PostMapping("/addService/{packageId}")
-    public ServiceOfPackageEntity saveService(@RequestBody ServiceDTO serviceDTO, @PathVariable int packageId) {
-        return serviceService.saveService(serviceDTO, packageId);
+    @PostMapping("/addServiceToPackage/{packageId}")
+    public ServiceOfPackageEntity saveServiceToPackage(@RequestBody ServiceDTO serviceDTO, @PathVariable int packageId) {
+        return serviceService.saveServiceToPackage(serviceDTO, packageId);
+    }
+
+    @PostMapping("/addService")
+    public ServiceEntity saveService(@RequestBody ServiceDTO serviceDTO) {
+        return serviceService.saveService(serviceDTO);
     }
 
     @PostMapping("/{serviceId}/{packageId}")
@@ -72,10 +77,11 @@ public class ServiceController implements SecuredRestController {
         return ResponseEntity.noContent().build();
     }
 
-//    @GetMapping("/host/{hostID}")
-//    public ResponseEntity<List<ServiceEntity>> getServicesByHostID(@PathVariable int hostID) {
-//        return ResponseEntity.ok(serviceService.getServicesByHostID(hostID));
-//    }
+    @DeleteMapping("/{serviceId}/{packageId}")
+    public ResponseEntity<Void> deleteServiceOutOfPackage(@PathVariable int serviceId, @PathVariable int packageId) {
+        serviceService.deleteServiceOutOfPackage(serviceId, packageId);
+        return ResponseEntity.noContent().build();
+    }
 
     @PatchMapping("/{id}")
     public ServiceEntity updateEachFieldById(@PathVariable int id, Map<String, Objects> fields) {

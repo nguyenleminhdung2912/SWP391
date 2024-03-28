@@ -18,6 +18,7 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Integer>
     List<ServiceEntity> findServicesByPackageId(int packageId);
 
     List<ServiceEntity> findServicesByIsDeleted(boolean a);
+    List<ServiceEntity> findServicesByIsDeletedAndAccountAccountID(boolean a, int id);
 
 
 }
