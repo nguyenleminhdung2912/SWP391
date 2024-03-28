@@ -2,6 +2,7 @@ package com.swp391.webapp.Config;
 
 import com.swp391.webapp.Filter.JwtFilter;
 import com.swp391.webapp.Service.AccountService;
+import com.swp391.webapp.Service.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig{
     @Autowired
     private JwtFilter jwtFilter;
     @Bean
@@ -60,6 +61,5 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-
 
 }
