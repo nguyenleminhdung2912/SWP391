@@ -142,7 +142,7 @@ public class LoginController implements SecuredRestController {
     public ResponseEntity<Void> activateHostAccount(@PathVariable String email) {
         AccountEntity accountEntity = accountService.loadUserByUsername(email);
         accountEntity.setStatus("Activated");
-        accountService.saveAccount(accountEntity);
+        accountService.saveAccountStatus(accountEntity);
         if (accountEntity.getRole().equals("Host")) {
             mailController.sendHostCongrats(accountEntity);
         } else if (accountEntity.getRole().equals("Guest")) {

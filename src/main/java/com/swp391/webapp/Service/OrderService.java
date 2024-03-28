@@ -165,15 +165,15 @@ public class OrderService {
         WalletEntity adminWallet = walletService.getWalletById(1).get();
         BigDecimal totalInWallet = new BigDecimal(adminWallet.getTotalMoney().longValue() - hostKeep.longValue());
         adminWallet.setTotalMoney(totalInWallet);
-        transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, new Date(), hostKeep, TransactionStatus.SENDING));
         walletService.saveWallet(adminWallet);
 
         //Them tien vao tai khoan host
         AccountEntity hostAccount = accountService.getAccountById(orderEntity.getPackageEntity().getAccount().getAccountID()).get();
-        WalletEntity hostWallet = walletService.getWalletById(hostAccount.getAccountID()).get();
+        WalletEntity hostWallet = walletService.getWalletByAccount(hostAccount);
         totalInWallet = new BigDecimal(hostWallet.getTotalMoney().longValue() + hostKeep.longValue());
         hostWallet.setTotalMoney(totalInWallet);
-        transactionService.saveTransaction(new TransactionEntity(orderEntity, hostWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, hostWallet, new Date(), hostKeep, TransactionStatus.RECEIVE));
         return walletService.saveWallet(hostWallet);
     }
 
@@ -210,7 +210,7 @@ public class OrderService {
             if (diffDay > 3) {
 
 
-                WalletEntity adminWallet = walletService.getWalletById(2).get();
+                WalletEntity adminWallet = walletService.getWalletById(1).get();
                 //Tru tien trong tai khoan admin
 
                 BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getDepositedMoney().longValue());

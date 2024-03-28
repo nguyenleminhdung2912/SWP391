@@ -3,7 +3,6 @@ package com.swp391.webapp.Service;
 import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Entity.Enum.TransactionStatus;
 import com.swp391.webapp.Repository.WalletRepository;
-import com.swp391.webapp.dto.WalletDTO;
 import com.swp391.webapp.utils.AccountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -85,13 +84,13 @@ public class WalletService {
 
     //Chuyen tien vao wallet cua admin
     public void guestPayForOrder(OrderEntity orderEntity, WalletEntity guestWallet){
-        WalletEntity adminWallet = walletRepository.findById(2).get();
+        WalletEntity adminWallet = walletRepository.findById(1).get();
         BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
         adminWallet.setTotalMoney(total);
-        TransactionEntity transaction = new TransactionEntity(orderEntity, adminWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING);
-        transactionService.saveTransaction(transaction);
 
-        transactionService.saveTransaction(new TransactionEntity(orderEntity, guestWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, guestWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
+
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
 
 
         walletRepository.save(adminWallet);
@@ -99,16 +98,19 @@ public class WalletService {
 
     public void guestPayForOrderThroughtWallet(OrderEntity orderEntity, WalletEntity guestWallet){
         //Lay vi admin them tien vao
-        WalletEntity adminWallet = walletRepository.findById(2).get();
+        WalletEntity adminWallet = walletRepository.findById(1).get();
         BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
         adminWallet.setTotalMoney(total);
-        TransactionEntity transaction = new TransactionEntity(orderEntity, adminWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING);
-        transactionService.saveTransaction(transaction);
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
 
         walletRepository.save(adminWallet);
         //Lay vi guest tru tien
         guestWallet.setTotalMoney(new BigDecimal(guestWallet.getTotalMoney().longValue() - orderEntity.getDepositedMoney().longValue()));
-        transactionService.saveTransaction(new TransactionEntity(orderEntity, guestWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
+
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
+
+
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, guestWallet, orderEntity.getCreateAt(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
 
         walletRepository.save(guestWallet);
 

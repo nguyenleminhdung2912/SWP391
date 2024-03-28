@@ -30,6 +30,7 @@ public class FeedbackService {
     @Autowired
     private AccountRepository accountRepository;
 
+
     // ServiceDTO methods for Feedback entity
 
     public List<FeedbackEntity> getAllFeedbacks() {
@@ -53,7 +54,9 @@ public class FeedbackService {
         feedback.setAPackage(orderEntity.getPackageEntity());
         feedback.setRating(feedbackDTO.getRating());
         feedback.setDescription(feedbackDTO.getDescription());
+        System.out.println(feedback.toString());
         feedbackRepository.save(feedback);
+
 
         return feedbackDTO;
     }

@@ -133,7 +133,7 @@ public class OrderController {
         String tmnCode = "II9036T8";
         String secretKey = "AFWMAKAMRNPUQTQWFDCGXTXPQBQKFIRF";
         String vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        String returnUrl = "http://localhost:5173/success";
+        String returnUrl = "http://birthdayblitzhub.online/success";
 
         String currCode = "VND";
         Map<String, String> vnpParams = new TreeMap<>();
@@ -197,32 +197,22 @@ public class OrderController {
         EmailDetail emailDetail = new EmailDetail();
         emailDetail.setRecipient(hostAccount.getEmail());
         emailDetail.setName(hostAccount.getName());
-        emailDetail.setSubject("Congratulation!");
+        emailDetail.setSubject("Notification!");
         emailDetail.setMsgBody("There is a new order!");
-        emailService.sendGuestBookingInformation(emailDetail);
+        emailService.sendHostThereIsNewOrder(emailDetail);
 
         //Gui mail cho host bao la da co 1 don hang moi
+        AccountEntity guestAccount = ordered.getPackageEntity().getAccount();
+        emailDetail = new EmailDetail();
+        emailDetail.setRecipient(guestAccount.getEmail());
+        emailDetail.setName(guestAccount.getName());
+        emailDetail.setSubject("Congratulation!");
+        emailDetail.setMsgBody("Your booking is successful!");
+        emailService.sendGuestBookingInformation(emailDetail);
 
         return orderService.saveOrder(ordered);
     }
 
-    //    @GetMapping("/ordered/pending")
-//    public List<OrderEntity> getPendingOrder(){
-//        return orderService.getPendingOrder();
-//    }
-//
-//    @GetMapping("/ordered/done")
-//    public List<OrderEntity> getDoneOrder(){
-//        return orderService.getDoneOrder();
-//    }
-//    @GetMapping("/ordered/accepted")
-//    public List<OrderEntity> getAcceptedOrder(){
-//        return orderService.getAcceptedOrder();
-//    }
-//    @GetMapping("/ordered/refused")
-//    public List<OrderEntity> getRefusedOrder(){
-//        return orderService.getRefusedOrder();
-//    }
     @GetMapping("/ordered/cancelled")
     public List<OrderEntity> getcancelledOrder() {
         return orderService.getCancelOrder();
