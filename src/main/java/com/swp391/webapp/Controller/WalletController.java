@@ -41,6 +41,11 @@ public class WalletController {
         return walletService.getWalletByAccount();
     }
 
+    @GetMapping("/{accountId}")
+    public WalletEntity getWalletByAccountId(@PathVariable int accountId) {
+        return walletService.getWalletByAccountId(accountId);
+    }
+
     @PostMapping
     public ResponseEntity<WalletEntity> createWallet(@RequestBody WalletEntity wallet) {
         walletService.saveWallet(wallet);

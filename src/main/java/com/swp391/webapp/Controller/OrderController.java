@@ -2,6 +2,8 @@ package com.swp391.webapp.Controller;
 
 import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Entity.Enum.OrderStatus;
+import com.swp391.webapp.Entity.Enum.TransactionStatus;
+import com.swp391.webapp.ExceptionHandler.WalletIsInsufficient;
 import com.swp391.webapp.Repository.OrderRepository;
 import com.swp391.webapp.Repository.PackageRepository;
 import com.swp391.webapp.Repository.ScheduleWorkingRepository;
@@ -111,7 +113,7 @@ public class OrderController {
         //Đặt trạng thái của order
         ordered.setStatus(OrderStatus.ORDERED);
         ordered.setTotalPrice(BigDecimal.valueOf(orderDTO.getTotalPrice()));
-        ordered.setQuantity(quantity+1);
+        ordered.setQuantity(quantity + 1);
         ordered.setNotes(orderDTO.getNotes());
         ordered.setPhone(orderDTO.getPhoneNumber());
         ordered.setCreateAt(createdate);
@@ -140,8 +142,8 @@ public class OrderController {
         vnpParams.put("vnp_TmnCode", tmnCode);
         vnpParams.put("vnp_Locale", "vn");
         vnpParams.put("vnp_CurrCode", currCode);
-        vnpParams.put("vnp_TxnRef", newOrder.getOrderID()+"");
-        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + newOrder.getOrderID()+"");
+        vnpParams.put("vnp_TxnRef", newOrder.getOrderID() + "");
+        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + newOrder.getOrderID() + "");
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Amount", String.valueOf(100 * depositMoney));
         vnpParams.put("vnp_ReturnUrl", returnUrl);
@@ -164,7 +166,8 @@ public class OrderController {
 
         StringBuilder urlBuilder = new StringBuilder(vnpUrl);
         urlBuilder.append("?");
-        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {urlBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {
+            urlBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
             urlBuilder.append("=");
             urlBuilder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
             urlBuilder.append("&");
@@ -180,18 +183,14 @@ public class OrderController {
     //Update status = PAID cho order
     //Dat coc = 40% tong gia tri don hang
     @GetMapping("/update-order")
-    public OrderEntity orderSuccess(@RequestParam int orderId){
+    public OrderEntity orderSuccess(@RequestParam int orderId) {
         OrderEntity ordered = orderService.findOrderById(orderId);
         ordered.setStatus(OrderStatus.PAID);
         //Tru tien tai khoan guest
         //Tai khoan ngan hang cua Guest truc tiep chuyen vao wallet cua admin
         //Them tien vo tai khoan admin
-        walletService.guestPayForOrder(ordered);
-        //Lay tai khoan cua Guest
         WalletEntity guestWallet = walletService.getWalletByAccount(ordered.getAccount());
-        //Luu transaction
-        TransactionEntity transaction = new TransactionEntity(ordered, guestWallet, ordered.getCreateAt(), ordered.getDepositedMoney());
-        transactionService.saveTransaction(transaction);
+        walletService.guestPayForOrder(ordered, guestWallet);
 
         //Gui mail cho khach hang thong bao rang order da duoc dat
         AccountEntity hostAccount = ordered.getPackageEntity().getAccount();
@@ -207,7 +206,7 @@ public class OrderController {
         return orderService.saveOrder(ordered);
     }
 
-//    @GetMapping("/ordered/pending")
+    //    @GetMapping("/ordered/pending")
 //    public List<OrderEntity> getPendingOrder(){
 //        return orderService.getPendingOrder();
 //    }
@@ -224,10 +223,75 @@ public class OrderController {
 //    public List<OrderEntity> getRefusedOrder(){
 //        return orderService.getRefusedOrder();
 //    }
-//    @GetMapping("/ordered/cancelled")
-//    public List<OrderEntity> getcancelledOrder(){
-//        return orderService.getCancelOrder();
-//    }
+    @GetMapping("/ordered/cancelled")
+    public List<OrderEntity> getcancelledOrder() {
+        return orderService.getCancelOrder();
+    }
+
+    @PostMapping("/pay-with-wallet")
+    public OrderEntity payOrderWithWallet(@RequestBody OrderDTO orderDTO) {
+
+        //Lấy ngày đặt lịch
+        Date createdate = new Date();
+        //Lấy thời gian đặt lịch
+        Schedule schedule = scheduleWorkingService.findScheduleByID(orderDTO.getScheduleId());
+//        schedule.setBusy(true);
+        scheduleWorkingService.save(schedule);
+        OrderEntity ordered = new OrderEntity();
+        //Tạo thời gian đặt order
+        ordered.setCreateAt(new Date());
+        //Lấy tài khoản người đặt
+        ordered.setAccount(accountUtils.getCurrentAccount());
+        PackageEntity packageEntity = packageRepository.findPackageByPackageID(orderDTO.getPackageId());
+        ordered.setPackageEntity(packageEntity);
+        ordered.setSchedule(schedule);
+        //Lấy quantity ra
+        int quantity = orderDTO.getOrderDetailDTOList().size();
+        //Lay so tien can dat coc
+        long depositMoney = orderDTO.getTotalPrice() * 40 / 100;
+
+        WalletEntity guestWallet = walletService.getWalletByAccount(accountUtils.getCurrentAccount());
+        if (guestWallet.getTotalMoney().longValue() < depositMoney) {
+            throw new WalletIsInsufficient("Your wallet doesn't have enough money!");
+        } else {
+            //Đặt trạng thái của order
+            ordered.setStatus(OrderStatus.ORDERED);
+            ordered.setTotalPrice(BigDecimal.valueOf(orderDTO.getTotalPrice()));
+            ordered.setQuantity(quantity + 1);
+            ordered.setNotes(orderDTO.getNotes());
+            ordered.setPhone(orderDTO.getPhoneNumber());
+            ordered.setCreateAt(createdate);
+            ordered.setCustomerName(orderDTO.getUsername());
+            ordered.setDate(orderDTO.getDate());
+            ordered.setDepositedMoney(BigDecimal.valueOf(depositMoney));
+            ordered.setRemainingMoney(BigDecimal.valueOf(orderDTO.getTotalPrice() - depositMoney));
+            ordered.setVenue(orderDTO.getVenue());
+            ordered.setCustomerEmail(orderDTO.getEmail());
+
+            //Luu order voi Status = ORDERED
+            OrderEntity newOrder = orderService.createOrder(ordered, orderDTO.getOrderDetailDTOList());
+
+            //Bat dau thanh toan
+            ordered.setStatus(OrderStatus.PAID);
+            //Tru tien tai khoan guest
+            //Tai khoan ngan hang cua Guest truc tiep chuyen vao wallet cua admin
+            //Them tien vo tai khoan admin
+            walletService.guestPayForOrderThroughtWallet(ordered, guestWallet);
+
+            //Gui mail cho khach hang thong bao rang order da duoc dat
+            AccountEntity hostAccount = ordered.getPackageEntity().getAccount();
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setRecipient(hostAccount.getEmail());
+            emailDetail.setName(hostAccount.getName());
+            emailDetail.setSubject("Congratulation!");
+            emailDetail.setMsgBody("There is a new order!");
+            emailService.sendGuestBookingInformation(emailDetail);
+
+            //Gui mail cho host bao la da co 1 don hang moi
+
+            return orderService.saveOrder(ordered);
+        }
+    }
 
     @PostMapping("/pay-ordered-payment/{orderId}")
     public ResponseEntity payForOrderedOrderURL(@PathVariable int orderId) throws NoSuchAlgorithmException, InvalidKeyException, Exception {
@@ -255,8 +319,8 @@ public class OrderController {
         vnpParams.put("vnp_TmnCode", tmnCode);
         vnpParams.put("vnp_Locale", "vn");
         vnpParams.put("vnp_CurrCode", currCode);
-        vnpParams.put("vnp_TxnRef", newOrder.getOrderID()+"");
-        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + newOrder.getOrderID()+"");
+        vnpParams.put("vnp_TxnRef", newOrder.getOrderID() + "");
+        vnpParams.put("vnp_OrderInfo", "Thanh toan cho ma GD: " + newOrder.getOrderID() + "");
         vnpParams.put("vnp_OrderType", "other");
         vnpParams.put("vnp_Amount", String.valueOf(100 * depositMoney));
         vnpParams.put("vnp_ReturnUrl", returnUrl);
@@ -279,7 +343,8 @@ public class OrderController {
 
         StringBuilder urlBuilder = new StringBuilder(vnpUrl);
         urlBuilder.append("?");
-        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {urlBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
+        for (Map.Entry<String, String> entry : vnpParams.entrySet()) {
+            urlBuilder.append(URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8.toString()));
             urlBuilder.append("=");
             urlBuilder.append(URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8.toString()));
             urlBuilder.append("&");
@@ -290,23 +355,24 @@ public class OrderController {
     }
 
     @PostMapping("/host/refuse-order/{orderId}")
-    public void refuseOrder(@PathVariable int orderId){
+    public void refuseOrder(@PathVariable int orderId) {
         orderService.refuseOrder(orderId);
     }
 
     @PostMapping("/host/accept-order/{orderId}")
-    public void acceptOrder(@PathVariable int orderId){
+    public void acceptOrder(@PathVariable int orderId) {
         orderService.acceptOrder(orderId);
     }
 
     @PostMapping("/guest/done-order/{orderId}")
-    public void doneOrder(@PathVariable int orderId){
+    public void doneOrder(@PathVariable int orderId) {
         orderService.doneOrder(orderId);
     }
 
-    @PostMapping("/guest/cancel-order/{orderId}")
-    public void cancelOrder(@PathVariable int orderId){
+    @PutMapping("/guest/cancel-order/{orderId}")
+    public String cancelOrder(@PathVariable int orderId) {
         orderService.cancelOrder(orderId);
+        return "Cancelled";
     }
 
     private String generateHMAC(String secretKey, String signData) throws NoSuchAlgorithmException, InvalidKeyException {

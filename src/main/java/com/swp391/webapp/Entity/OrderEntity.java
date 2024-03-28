@@ -70,7 +70,7 @@ public class OrderEntity {
 
     @Column(nullable = false)
     @JsonFormat(pattern="MM-dd-yyyy")
-    private java.util.Date date;
+    private Date date;
     // Constructors, getters, setters, etc.
 }
 

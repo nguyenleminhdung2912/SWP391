@@ -2,6 +2,7 @@ package com.swp391.webapp.Service;
 
 import com.swp391.webapp.Entity.*;
 import com.swp391.webapp.Entity.Enum.OrderStatus;
+import com.swp391.webapp.Entity.Enum.TransactionStatus;
 import com.swp391.webapp.ExceptionHandler.AlreadyExistedException;
 import com.swp391.webapp.Repository.*;
 import com.swp391.webapp.dto.OrderDTO;
@@ -40,6 +41,8 @@ public class OrderService {
     private Order_Detail_Repository order_Detail_Repository;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private TransactionService transactionService;
 
     // ServiceDTO methods for Order entity
 
@@ -111,13 +114,15 @@ public class OrderService {
         WalletEntity adminWallet = walletService.getWalletById(1).get();
         BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getDepositedMoney().longValue());
         adminWallet.setTotalMoney(total);
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
         walletService.saveWallet(adminWallet);
 
         //Them tien vao tai khoan guest
         AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
-        WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
+        WalletEntity guestWallet = walletService.getWalletByAccount(guestAccount);
         total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
         guestWallet.setTotalMoney(total);
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, guestWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
 
         //Gui mail cho khach hang thong bao rang order da bi refuse
         EmailDetail emailDetail = new EmailDetail();
@@ -160,56 +165,93 @@ public class OrderService {
         WalletEntity adminWallet = walletService.getWalletById(1).get();
         BigDecimal totalInWallet = new BigDecimal(adminWallet.getTotalMoney().longValue() - hostKeep.longValue());
         adminWallet.setTotalMoney(totalInWallet);
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
         walletService.saveWallet(adminWallet);
 
         //Them tien vao tai khoan host
         AccountEntity hostAccount = accountService.getAccountById(orderEntity.getPackageEntity().getAccount().getAccountID()).get();
         WalletEntity hostWallet = walletService.getWalletById(hostAccount.getAccountID()).get();
         totalInWallet = new BigDecimal(hostWallet.getTotalMoney().longValue() + hostKeep.longValue());
+        hostWallet.setTotalMoney(totalInWallet);
+        transactionService.saveTransaction(new TransactionEntity(orderEntity, hostWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
         return walletService.saveWallet(hostWallet);
     }
 
     public WalletEntity cancelOrder(int orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).get();
-        orderEntity.setStatus(OrderStatus.CANCELLED);
+        if (orderEntity.getStatus().equals(OrderStatus.ORDERED)) {
+
+            orderEntity.setStatus(OrderStatus.CANCELLED);
+            orderRepository.save(orderEntity);
+
+        } else if (orderEntity.getStatus().equals(OrderStatus.PAID) || orderEntity.getStatus().equals(OrderStatus.ACCEPTED)) {
+
+            orderEntity.setStatus(OrderStatus.CANCELLED);
+            orderRepository.save(orderEntity);
 
 //        //Kiem tra con bao nhieu ngay la den bua tiec
-        Date d1 = new Date();
-        Date d2 = orderEntity.getDate();
-        float diffNum = 0;
-        diffNum = d2.getDate() - d1.getDate();
+            Date d1 = new Date();
+            Date d2 = orderEntity.getDate();
+            float diffDay = 0;
+            float diffMonth = 0;
+            float diffYear = 0;
 
-        //Tren 3 ngay thi hoan tien 100%
-        if (diffNum > 3) {
-            //Tru tien trong tai khoan admin
-            WalletEntity adminWallet = walletService.getWalletById(1).get();
-            BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getDepositedMoney().longValue());
-            adminWallet.setTotalMoney(total);
-            walletService.saveWallet(adminWallet);
+            diffMonth = d2.getMonth() - d1.getMonth();
+            diffYear = d2.getYear() - d1.getYear();
 
-            //Them tien vao tai khoan guest
-            AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
-            WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
-            total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
-            return walletService.saveWallet(guestWallet);
-        }
-        //Con 2-3 ngay thi hoan 50%
-        else if (diffNum == 2 || diffNum == 3) {
-            //Tru tien trong tai khoan admin
-            WalletEntity adminWallet = walletService.getWalletById(1).get();
-            BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - (orderEntity.getDepositedMoney().longValue() * 50 / 100));
-            adminWallet.setTotalMoney(total);
-            walletService.saveWallet(adminWallet);
+            if (diffYear >= 0) {
+                if (diffMonth > 0) {
+                    diffDay = d1.getDate() - d2.getDate();
+                } else if (diffMonth == 0) {
+                    diffDay = d2.getDate() - d1.getDate();
+                }
+            }
+            //Tren 3 ngay thi hoan tien 100%
+            if (diffDay > 3) {
 
-            //Them tien vao tai khoan guest
-            AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
-            WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
-            total = new BigDecimal(guestWallet.getTotalMoney().longValue() + (orderEntity.getDepositedMoney().longValue() * 50 / 100));
-            return walletService.saveWallet(guestWallet);
-        }
-        //Con duoi 2 ngay khong cho huy tiec
-        else if (diffNum < 2) {
-            throw new RuntimeException(new AlreadyExistedException("There are only 1 day left until the party, you cannot cancel it!"));
+
+                WalletEntity adminWallet = walletService.getWalletById(2).get();
+                //Tru tien trong tai khoan admin
+
+                BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - orderEntity.getDepositedMoney().longValue());
+                adminWallet.setTotalMoney(total);
+                //Luu transaction cho admin
+                transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
+                walletService.saveWallet(adminWallet);
+
+                //Them tien vao tai khoan guest
+                AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
+                WalletEntity guestWallet = walletService.getWalletByAccount(guestAccount);
+                total = new BigDecimal(guestWallet.getTotalMoney().longValue() + orderEntity.getDepositedMoney().longValue());
+                guestWallet.setTotalMoney(total);
+                //Luu transaction cho guest
+                transactionService.saveTransaction(new TransactionEntity(orderEntity, guestWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
+
+                return walletService.saveWallet(guestWallet);
+            }
+            //Con 2-3 ngay thi hoan 50%
+            else if (diffDay == 2 || diffDay == 3) {
+                //Tru tien trong tai khoan admin
+                WalletEntity adminWallet = walletService.getWalletById(1).get();
+                BigDecimal total = new BigDecimal(adminWallet.getTotalMoney().longValue() - (orderEntity.getDepositedMoney().longValue() * 50 / 100));
+                adminWallet.setTotalMoney(total);
+                transactionService.saveTransaction(new TransactionEntity(orderEntity, adminWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.SENDING));
+                walletService.saveWallet(adminWallet);
+
+                //Them tien vao tai khoan guest
+                AccountEntity guestAccount = accountService.getAccountById(orderEntity.getAccount().getAccountID()).get();
+                WalletEntity guestWallet = walletService.getWalletById(guestAccount.getAccountID()).get();
+                total = new BigDecimal(guestWallet.getTotalMoney().longValue() + (orderEntity.getDepositedMoney().longValue() * 50 / 100));
+                guestWallet.setTotalMoney(total);
+                transactionService.saveTransaction(new TransactionEntity(orderEntity, guestWallet, new Date(), orderEntity.getDepositedMoney(), TransactionStatus.RECEIVE));
+
+                return walletService.saveWallet(guestWallet);
+            }
+            //Con duoi 2 ngay khong cho huy tiec
+            else if (diffDay < 2) {
+                throw new RuntimeException(new AlreadyExistedException("There are only 1 day left until the party, you cannot cancel it!"));
+            }
+            orderRepository.save(orderEntity);
         }
         return null;
     }

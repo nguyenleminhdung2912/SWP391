@@ -59,7 +59,7 @@ public class EmailService {
 
             context.setVariable("link", link);
 
-            String text = templateEngine.process("BookingSuccessful", context);
+            String text = templateEngine.process("HostAccountActivated", context);
 
             // Creating a simple mail message
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -209,6 +209,32 @@ public class EmailService {
             context.setVariable("link", link);
 
             String text = templateEngine.process("OrderAccepted", context);
+
+            // Creating a simple mail message
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+
+            // Setting up necessary details
+            mimeMessageHelper.setFrom("admin@gmail.com");
+            mimeMessageHelper.setTo(emailDetail.getRecipient());
+            mimeMessageHelper.setText(text, true);
+            mimeMessageHelper.setSubject(emailDetail.getSubject());
+            javaMailSender.send(mimeMessage);
+        }catch (MessagingException messagingException){
+            messagingException.printStackTrace();
+        }
+    }
+
+    public void sendHostAccountIsRefused(EmailDetail emailDetail) {
+        try{
+            Context context = new Context();
+
+            context.setVariable("name", emailDetail.getName());
+//            context.setVariable("name", "Minh Dung");
+
+//            String link = "http://localhost:5173/login" + emailDetail.getRecipient();
+
+            String text = templateEngine.process("HostAccountRefused", context);
 
             // Creating a simple mail message
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();

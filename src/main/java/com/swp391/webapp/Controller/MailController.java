@@ -53,6 +53,23 @@ public class MailController {
             e.printStackTrace();
         }
     }
+
+    @GetMapping("/test/sendHostAccountRefused")
+    public void sendHostAccountRefused(AccountEntity accountEntity) {
+        try {
+            Optional<AccountEntity> account = accountService.getAccountById(accountEntity.getAccountID());
+            EmailDetail emailDetail = new EmailDetail();
+            emailDetail.setRecipient(account.get().getEmail());
+            emailDetail.setName(accountEntity.getName());
+//            emailDetail.setRecipient("nguyenleminhdung2912@gmail.com");
+            emailDetail.setSubject("We are sorry!");
+            emailDetail.setMsgBody("Your account has been refused!");
+//            emailDetail.setName(accountEntity.getName());
+            emailService.sendHostAccountIsRefused(emailDetail);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @GetMapping("/test/sendHostGuestHasCancelled")
     public void sendHostGuestHasCancelled(AccountEntity accountEntity) {
         try {

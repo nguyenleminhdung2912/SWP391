@@ -45,6 +45,7 @@ public class LoginController implements SecuredRestController {
     private AccountUtils accountUtils;
     @Autowired
     private MailController mailController = new MailController();
+
     @Autowired
     private PackageRepository packageRepository;
 
@@ -55,16 +56,16 @@ public class LoginController implements SecuredRestController {
     }
 
     @PostMapping("/login")
-    public AccountEntity login(@RequestBody LoginRequestDTO loginRequestDTO)  {
+    public AccountEntity login(@RequestBody LoginRequestDTO loginRequestDTO) {
         AccountEntity accountEntity = accountService.loadUserByUsername(loginRequestDTO.getEmail());
         if (accountEntity.getStatus().equals("Inactivated")) {
             throw new VerifyError("This account has not been verified");
         }
         Authentication authentication = null;
-        try{
+        try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
             System.out.println(authentication);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (authentication != null && authentication.isAuthenticated()) {
@@ -78,28 +79,29 @@ public class LoginController implements SecuredRestController {
         }
     }
 
+
     @GetMapping("/getAlluser")
-    public List<AccountEntity> getAllUsers(){
+    public List<AccountEntity> getAllUsers() {
         return accountService.getAllAcounts();
     }
 
     @GetMapping("/getAllHost")
-    public List<AccountEntity> getAllHost(){
+    public List<AccountEntity> getAllHost() {
         return accountService.getAllHost();
     }
 
     @GetMapping("/getAllGuest")
-    public List<AccountEntity> getAllGuest(){
+    public List<AccountEntity> getAllGuest() {
         return accountService.getAllGuest();
     }
 
     @GetMapping("/getUser/{id}")
-    public Optional<AccountEntity> getAllUsers(@PathVariable Integer id){
+    public Optional<AccountEntity> getAllUsers(@PathVariable Integer id) {
         return accountService.getAccountById(id);
     }
 
     @PostMapping("/register")
-    public AccountEntity addAccount(@RequestBody AccountEntity accountEntity){
+    public AccountEntity addAccount(@RequestBody AccountEntity accountEntity) {
         List<AccountEntity> listAccount = accountService.getAllAcounts();
         for (AccountEntity account : listAccount) {
             if (account.getEmail().equals(accountEntity.getEmail())) {
@@ -124,13 +126,15 @@ public class LoginController implements SecuredRestController {
 
     @DeleteMapping("/refuse/{accountId}")
     public ResponseEntity<Void> refuseAccount(@PathVariable int accountId) {
-        walletService.deleteWalletByAccountID(accountId);
-        accountService.refuseAccount(accountId);
+        AccountEntity account = accountService.getAccountById(accountId).get();
+        mailController.sendHostAccountRefused(account);
+//        walletService.deleteWalletByAccountID(accountId);
+        accountService.refuseAccount(account);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/profile")
-    public ResponseEntity getProfile(){
+    public ResponseEntity getProfile() {
         return ResponseEntity.ok(accountUtils.getCurrentAccount());
     }
 
@@ -138,11 +142,13 @@ public class LoginController implements SecuredRestController {
     public ResponseEntity<Void> activateHostAccount(@PathVariable String email) {
         AccountEntity accountEntity = accountService.loadUserByUsername(email);
         accountEntity.setStatus("Activated");
+        accountService.saveAccount(accountEntity);
         if (accountEntity.getRole().equals("Host")) {
-            mailController.sendMail(accountEntity);
+            mailController.sendHostCongrats(accountEntity);
+        } else if (accountEntity.getRole().equals("Guest")) {
+            return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("http://birthdayblitzhub.online/login")).build();
         }
-        accountService.saveAccountStatus(accountEntity);
-        return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("http://birthdayblitzhub.online/login")).build();
+        return null;
     }
 
     @PatchMapping("/{id}")

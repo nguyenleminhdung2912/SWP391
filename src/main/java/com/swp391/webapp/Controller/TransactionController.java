@@ -22,6 +22,18 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<List<TransactionEntity>> getAllTransactionsByAccount(@PathVariable int accountId) {
+        List<TransactionEntity> transactions = transactionService.getAllTransactionsByAccountId(accountId);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("/wallet/{walletId}")
+    public ResponseEntity<List<TransactionEntity>> getAllTransactionsByWallet(@PathVariable int walletId) {
+        List<TransactionEntity> transactions = transactionService.getAllTransactionsByWallet(walletId);
+        return ResponseEntity.ok(transactions);
+    }
+
     @GetMapping("/{transactionId}")
     public ResponseEntity<TransactionEntity> getTransactionById(@PathVariable int transactionId) {
         return transactionService.getTransactionById(transactionId)

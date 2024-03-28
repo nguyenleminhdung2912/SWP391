@@ -1,6 +1,7 @@
 package com.swp391.webapp.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.swp391.webapp.Entity.Enum.Provider;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,6 +50,9 @@ public class AccountEntity implements UserDetails {
 
     @Column(nullable = false)
     private int isDeleted = 0;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     @Transient
     private String tokens;

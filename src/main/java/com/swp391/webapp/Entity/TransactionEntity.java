@@ -1,5 +1,6 @@
 package com.swp391.webapp.Entity;
 
+import com.swp391.webapp.Entity.Enum.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,12 +36,23 @@ public class TransactionEntity {
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;
+    @Column(nullable = true)
+    private TransactionStatus transactionStatus;
 
     public TransactionEntity(OrderEntity order, WalletEntity wallet, Date createAt, BigDecimal totalPrice) {
         this.order = order;
         this.wallet = wallet;
         this.createAt = createAt;
         this.totalPrice = totalPrice;
+        this.transactionStatus = null;
+    }
+
+    public TransactionEntity(OrderEntity order, WalletEntity wallet, Date createAt, BigDecimal totalPrice, TransactionStatus transactionStatus) {
+        this.order = order;
+        this.wallet = wallet;
+        this.createAt = createAt;
+        this.totalPrice = totalPrice;
+        this.transactionStatus = transactionStatus;
     }
 
     // Constructors, getters, setters, etc.

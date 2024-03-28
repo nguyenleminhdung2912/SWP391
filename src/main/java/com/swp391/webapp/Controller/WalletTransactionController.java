@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/transactions")
+@RequestMapping("/api/wallet-transactions")
 public class WalletTransactionController {
 
     @Autowired
